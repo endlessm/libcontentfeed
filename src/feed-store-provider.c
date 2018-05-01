@@ -52,7 +52,6 @@ typedef GObject * (*ModelFromResultFunc) (GVariant *model_variant,
 static GSList *
 call_dbus_proxy_and_construct_from_models_and_shards (GDBusProxy                      *proxy,
                                                       const gchar                     *method_name,
-                                                      const gchar                     *source_name,
                                                       ModelsFromResultsAndShardsFunc   marshal_func,
                                                       gpointer                         marshal_data,
                                                       GCancellable                    *cancellable,
@@ -95,7 +94,6 @@ call_dbus_proxy_and_construct_from_models_and_shards (GDBusProxy                
 static GObject *
 call_dbus_proxy_and_construct_from_model (GDBusProxy           *proxy,
                                           const gchar          *method_name,
-                                          const gchar          *source_name,
                                           ModelFromResultFunc   marshal_func,
                                           gpointer              marshal_data,
                                           GCancellable         *cancellable,
@@ -345,11 +343,9 @@ append_discovery_feed_content_from_proxy (EosDiscoveryFeedKnowledgeAppProxy  *ka
                                                                                                              data->thumbnail_size,
                                                                                                              data->factory);
   GDBusProxy *dbus_proxy = eos_discovery_feed_knowledge_app_proxy_get_dbus_proxy (ka_proxy);
-  const gchar *desktop_id = eos_discovery_feed_knowledge_app_proxy_get_desktop_id (ka_proxy);
 
   return call_dbus_proxy_and_construct_from_models_and_shards (dbus_proxy,
                                                                data->method,
-                                                               desktop_id,
                                                                article_cards_from_shards_and_items,
                                                                marshal_data,
                                                                cancellable,
@@ -484,11 +480,9 @@ append_discovery_feed_video_from_proxy (EosDiscoveryFeedKnowledgeAppProxy  *ka_p
                                         GError                            **error)
 {
   GDBusProxy *dbus_proxy = eos_discovery_feed_knowledge_app_proxy_get_dbus_proxy (ka_proxy);
-  const gchar *desktop_id = eos_discovery_feed_knowledge_app_proxy_get_desktop_id (ka_proxy);
 
   return call_dbus_proxy_and_construct_from_models_and_shards (dbus_proxy,
                                                                "GetVideos",
-                                                               desktop_id,
                                                                video_cards_from_shards_and_items,
                                                                ka_proxy,
                                                                cancellable,
@@ -544,11 +538,9 @@ append_discovery_feed_artwork_from_proxy (EosDiscoveryFeedKnowledgeAppProxy  *ka
                                           GError                            **error)
 {
   GDBusProxy *dbus_proxy = eos_discovery_feed_knowledge_app_proxy_get_dbus_proxy (ka_proxy);
-  const gchar *desktop_id = eos_discovery_feed_knowledge_app_proxy_get_desktop_id (ka_proxy);
 
   return call_dbus_proxy_and_construct_from_models_and_shards (dbus_proxy,
                                                                "ArtworkCardDescriptions",
-                                                               desktop_id,
                                                                artwork_cards_from_shards_and_items,
                                                                ka_proxy,
                                                                cancellable,
@@ -728,11 +720,9 @@ append_discovery_feed_word_from_proxy (EosDiscoveryFeedKnowledgeAppProxy  *ka_pr
                                        GError                            **error)
 {
   GDBusProxy *dbus_proxy = eos_discovery_feed_knowledge_app_proxy_get_dbus_proxy (ka_proxy);
-  const gchar *desktop_id = eos_discovery_feed_knowledge_app_proxy_get_desktop_id (ka_proxy);
 
   return call_dbus_proxy_and_construct_from_model (dbus_proxy,
                                                    "GetWordOfTheDay",
-                                                   desktop_id,
                                                    word_card_from_item,
                                                    NULL,
                                                    cancellable,
@@ -756,11 +746,9 @@ append_discovery_feed_quote_from_proxy (EosDiscoveryFeedKnowledgeAppProxy  *ka_p
                                         GError                            **error)
 {
   GDBusProxy *dbus_proxy = eos_discovery_feed_knowledge_app_proxy_get_dbus_proxy (ka_proxy);
-  const gchar *desktop_id = eos_discovery_feed_knowledge_app_proxy_get_desktop_id (ka_proxy);
 
   return call_dbus_proxy_and_construct_from_model (dbus_proxy,
                                                    "GetQuoteOfTheDay",
-                                                   desktop_id,
                                                    quote_card_from_item,
                                                    NULL,
                                                    cancellable,

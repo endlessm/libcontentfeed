@@ -38,16 +38,12 @@ enum {
   NPROPS
 };
 
-static GParamSpec *eos_discovery_feed_knowledge_app_news_card_store_props [NPROPS] = { NULL, };
-
 static void
 eos_discovery_feed_knowledge_app_news_card_store_get_property (GObject    *object,
                                                                guint       prop_id,
                                                                GValue     *value,
                                                                GParamSpec *pspec)
 {
-  EosDiscoveryFeedKnowledgeAppNewsCardStore *store = EOS_DISCOVERY_FEED_KNOWLEDGE_APP_NEWS_CARD_STORE (object);
-
   switch (prop_id)
     {
     case PROP_TYPE:
