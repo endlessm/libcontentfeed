@@ -1,0 +1,14 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: @PACKAGE_NAME@
+Version: @PACKAGE_VERSION@
+Description: Content Feed generation library for Discovery Feed and Companion App
+URL: @PACKAGE_URL@
+
+Requires: @AX_PACKAGE_REQUIRES@
+Requires.private: @AX_PACKAGE_REQUIRES_PRIVATE@
+Cflags: -I${includedir}/@LIBCONTENTFEED_API_NAME@
+Libs: -L${libdir} -l@LIBCONTENTFEED_API_NAME@
