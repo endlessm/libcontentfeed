@@ -100,12 +100,12 @@ eos_discovery_feed_knowledge_app_video_card_store_finalize (GObject *object)
 }
 
 static void
-eos_discovery_feed_knowledge_app_video_card_store_init (EosDiscoveryFeedKnowledgeAppVideoCardStore *store)
+eos_discovery_feed_knowledge_app_video_card_store_init (EosDiscoveryFeedKnowledgeAppVideoCardStore *store G_GNUC_UNUSED)
 {
 }
 
 static void
-base_card_store_iface_init (EosDiscoveryFeedBaseCardStoreInterface *iface)
+base_card_store_iface_init (EosDiscoveryFeedBaseCardStoreInterface *iface G_GNUC_UNUSED)
 {
 }
 

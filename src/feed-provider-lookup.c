@@ -501,8 +501,8 @@ lookup_providers (GCancellable  *cancellable,
 
 static void
 lookup_providers_thread (GTask        *task,
-                         gpointer      source,
-                         gpointer      task_data,
+                         gpointer      source G_GNUC_UNUSED,
+                         gpointer      task_data G_GNUC_UNUSED,
                          GCancellable *cancellable)
 {
   g_autoptr(GError) local_error = NULL;

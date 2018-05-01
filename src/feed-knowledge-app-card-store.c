@@ -180,12 +180,12 @@ eos_discovery_feed_knowledge_app_card_store_dispose (GObject *object)
 }
 
 static void
-eos_discovery_feed_knowledge_app_card_store_init (EosDiscoveryFeedKnowledgeAppCardStore *store)
+eos_discovery_feed_knowledge_app_card_store_init (EosDiscoveryFeedKnowledgeAppCardStore *store G_GNUC_UNUSED)
 {
 }
 
 static void
-base_card_store_iface_init (EosDiscoveryFeedBaseCardStoreInterface *iface)
+base_card_store_iface_init (EosDiscoveryFeedBaseCardStoreInterface *iface G_GNUC_UNUSED)
 {
 }
 

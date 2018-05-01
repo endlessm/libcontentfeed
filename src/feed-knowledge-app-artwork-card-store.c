@@ -109,12 +109,12 @@ eos_discovery_feed_knowledge_app_artwork_card_store_finalize (GObject *object)
 }
 
 static void
-eos_discovery_feed_knowledge_app_artwork_card_store_init (EosDiscoveryFeedKnowledgeAppArtworkCardStore *store)
+eos_discovery_feed_knowledge_app_artwork_card_store_init (EosDiscoveryFeedKnowledgeAppArtworkCardStore *store G_GNUC_UNUSED)
 {
 }
 
 static void
-base_card_store_iface_init (EosDiscoveryFeedBaseCardStoreInterface *iface)
+base_card_store_iface_init (EosDiscoveryFeedBaseCardStoreInterface *iface G_GNUC_UNUSED)
 {
 }
 
