@@ -118,7 +118,7 @@ G_DEFINE_AUTOPTR_CLEANUP_FUNC (IndividualTaskResultClosure,
                                individual_task_result_closure_free)
 
 void
-individual_task_result_completed (GObject      *source,
+individual_task_result_completed (GObject      *source G_GNUC_UNUSED,
                                   GAsyncResult *result,
                                   gpointer      user_data)
 {

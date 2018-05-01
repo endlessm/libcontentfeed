@@ -479,7 +479,7 @@ video_cards_from_shards_and_items (const char * const *shards_strv,
 
 static gpointer
 append_discovery_feed_video_from_proxy (EosDiscoveryFeedKnowledgeAppProxy  *ka_proxy,
-                                        gpointer                            proxy_data,
+                                        gpointer                            proxy_data G_GNUC_UNUSED,
                                         GCancellable                       *cancellable,
                                         GError                            **error)
 {
@@ -539,7 +539,7 @@ artwork_cards_from_shards_and_items (const char * const *shards_strv,
 
 static gpointer
 append_discovery_feed_artwork_from_proxy (EosDiscoveryFeedKnowledgeAppProxy  *ka_proxy,
-                                          gpointer                            proxy_data,
+                                          gpointer                            proxy_data G_GNUC_UNUSED,
                                           GCancellable                       *cancellable,
                                           GError                            **error)
 {
@@ -597,7 +597,7 @@ G_DEFINE_AUTOPTR_CLEANUP_FUNC (AppendStoresTaskData,
 
 static void
 append_stores_task_from_proxy_thread (GTask        *task,
-                                      gpointer      source,
+                                      gpointer      source G_GNUC_UNUSED,
                                       gpointer      task_data,
                                       GCancellable *cancellable)
 {
@@ -647,7 +647,7 @@ object_slist_free (GSList *slist)
 }
 
 static void
-marshal_word_quote_into_store (GObject      *source,
+marshal_word_quote_into_store (GObject      *source G_GNUC_UNUSED,
                                GAsyncResult *result,
                                gpointer      user_data)
 {
@@ -710,7 +710,7 @@ marshal_word_quote_into_store (GObject      *source,
 
 static GObject *
 word_card_from_item (GVariant *model_props,
-                     gpointer  user_data)
+                     gpointer  user_data G_GNUC_UNUSED)
 {
   const gchar *word = lookup_string_in_dict_variant (model_props, "word");
   const gchar *part_of_speech = lookup_string_in_dict_variant (model_props, "part_of_speech");
@@ -723,7 +723,7 @@ word_card_from_item (GVariant *model_props,
 
 static gpointer
 append_discovery_feed_word_from_proxy (EosDiscoveryFeedKnowledgeAppProxy  *ka_proxy,
-                                       gpointer                            proxy_data,
+                                       gpointer                            proxy_data G_GNUC_UNUSED,
                                        GCancellable                       *cancellable,
                                        GError                            **error)
 {
@@ -741,7 +741,7 @@ append_discovery_feed_word_from_proxy (EosDiscoveryFeedKnowledgeAppProxy  *ka_pr
 
 static GObject *
 quote_card_from_item (GVariant *model_props,
-                      gpointer  user_data)
+                      gpointer  user_data G_GNUC_UNUSED)
 {
   const gchar *title = lookup_string_in_dict_variant (model_props, "title");
   const gchar *author = lookup_string_in_dict_variant (model_props, "author");
@@ -751,7 +751,7 @@ quote_card_from_item (GVariant *model_props,
 
 static gpointer
 append_discovery_feed_quote_from_proxy (EosDiscoveryFeedKnowledgeAppProxy  *ka_proxy,
-                                        gpointer                            proxy_data,
+                                        gpointer                            proxy_data G_GNUC_UNUSED,
                                         GCancellable                       *cancellable,
                                         GError                            **error)
 {
@@ -880,7 +880,7 @@ unordered_card_arrays_from_queries (GPtrArray           *ka_proxies,
 }
 
 static void
-received_all_unordered_card_array_results_from_queries (GObject      *source,
+received_all_unordered_card_array_results_from_queries (GObject      *source G_GNUC_UNUSED,
                                                         GAsyncResult *result,
                                                         gpointer      user_data)
 {

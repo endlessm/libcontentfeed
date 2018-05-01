@@ -50,7 +50,7 @@ enum {
 static GParamSpec *eos_discovery_feed_provider_info_props [NPROPS] = { NULL, };
 
 static void
-eos_discovery_feed_provider_info_init (EosDiscoveryFeedProviderInfo *provider_info)
+eos_discovery_feed_provider_info_init (EosDiscoveryFeedProviderInfo *provider_info G_GNUC_UNUSED)
 {
 }
 

@@ -88,7 +88,7 @@ eos_discovery_feed_orderable_model_get_model (EosDiscoveryFeedOrderableModel *mo
 }
 
 static void
-eos_discovery_feed_orderable_model_init (EosDiscoveryFeedOrderableModel *model)
+eos_discovery_feed_orderable_model_init (EosDiscoveryFeedOrderableModel *model G_GNUC_UNUSED)
 {
 }
 

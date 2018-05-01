@@ -221,7 +221,7 @@ instantiate_proxy_for_interface_sync (GDBusConnection               *connection,
 
 static void
 instantiate_proxy_for_interface_thread (GTask        *task,
-                                        gpointer      source,
+                                        gpointer      source G_GNUC_UNUSED,
                                         gpointer      task_data,
                                         GCancellable *cancellable)
 {
@@ -266,7 +266,7 @@ instantiate_proxy_for_interface (GDBusConnection              *connection,
 }
 
 static void
-on_received_all_instantiation_results (GObject      *source,
+on_received_all_instantiation_results (GObject      *source G_GNUC_UNUSED,
                                        GAsyncResult *result,
                                        gpointer      user_data)
 {

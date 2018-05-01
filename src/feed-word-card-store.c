@@ -107,7 +107,7 @@ eos_discovery_feed_word_card_store_finalize (GObject *object)
 }
 
 static void
-eos_discovery_feed_word_card_store_init (EosDiscoveryFeedWordCardStore *store)
+eos_discovery_feed_word_card_store_init (EosDiscoveryFeedWordCardStore *store G_GNUC_UNUSED)
 {
 }
 
