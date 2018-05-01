@@ -71,7 +71,8 @@ trim_to_first_two_sentences (const gchar *str)
     {
       if (strlen (*iter) > 0)
         g_ptr_array_add (sentences, *iter);
-        ++sentence_count;
+
+      ++sentence_count;
     }
 
   /* Null-terminate */
