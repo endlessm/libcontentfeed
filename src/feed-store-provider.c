@@ -356,7 +356,7 @@ static gboolean
 parse_int64_with_limits (const gchar  *str,
                          guint         base,
                          gint64        min,
-                         guint64       max,
+                         gint64        max,
                          gint64       *out,
                          GError      **error)
 {
@@ -383,8 +383,8 @@ parse_int64_with_limits (const gchar  *str,
       g_set_error (error,
                    G_IO_ERROR,
                    G_IO_ERROR_FAILED,
-                   "Parsing of integer failed, %lli is not "
-                   "in the range of %lli - %lli",
+                   "Parsing of integer failed, %li is not "
+                   "in the range of %li - %li",
                    ret,
                    min,
                    max);
@@ -417,9 +417,9 @@ parse_duration (const gchar  *duration,
   seconds = floor (((gint64) total_seconds) % 60);
 
   if (hours > 0)
-    return g_strdup_printf ("%lli:%02lli:%02lli", hours, minutes, seconds);
+    return g_strdup_printf ("%li:%02li:%02li", hours, minutes, seconds);
 
-  return g_strdup_printf ("%lli:%02lli", minutes, seconds);
+  return g_strdup_printf ("%li:%02li", minutes, seconds);
 }
 
 static GSList *
