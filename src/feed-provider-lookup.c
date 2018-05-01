@@ -278,7 +278,6 @@ language_code_is_compatible (const gchar         *language,
                              const gchar * const *supported_languages)
 {
   g_auto(GStrv) split_language_parts = g_strsplit (language, "_", -1);
-  const gchar * const *iter = supported_languages;
   const gchar *language_code = split_language_parts[0];
 
   return g_strv_contains (supported_languages, language_code);
