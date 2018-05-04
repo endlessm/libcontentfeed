@@ -86,7 +86,7 @@ eos_discovery_feed_knowledge_app_proxy_get_knowledge_app_id (EosDiscoveryFeedKno
 }
 
 static void
-eos_discovery_feed_knowledge_app_proxy_init (EosDiscoveryFeedKnowledgeAppProxy *model)
+eos_discovery_feed_knowledge_app_proxy_init (EosDiscoveryFeedKnowledgeAppProxy *model G_GNUC_UNUSED)
 {
 }
 

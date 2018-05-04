@@ -251,7 +251,7 @@ card_emitter_state_new (void)
   state->app_indices_for_card_type = make_app_indices_for_card_type ();
 
   return state;
-};
+}
 
 static void
 card_emitter_state_free (CardEmitterState *state)
