@@ -278,7 +278,6 @@ language_code_is_compatible (const gchar         *language,
                              const gchar * const *supported_languages)
 {
   g_auto(GStrv) split_language_parts = g_strsplit (language, "_", -1);
-  const gchar * const *iter = supported_languages;
   const gchar *language_code = split_language_parts[0];
 
   return g_strv_contains (supported_languages, language_code);
@@ -450,13 +449,31 @@ append_providers_in_directory_to_ptr_array (GFile                *directory,
 }
 
 static GStrv
+get_force_additional_languages_from_gsettings (void)
+{
+  GSettingsSchemaSource *schema_source = g_settings_schema_source_get_default ();
+  g_autoptr(GSettingsSchema) schema = g_settings_schema_source_lookup (schema_source,
+                                                                       "com.endlessm.DiscoveryFeed",
+                                                                       TRUE);
+  const gchar *empty[] = {
+    NULL
+  };
+
+  if (schema != NULL)
+    {
+      g_autoptr(GSettings) settings = g_settings_new_full (schema, NULL, NULL);
+      return g_settings_get_strv (settings, "force-additional-languages");
+    }
+
+  return g_strdupv ((GStrv) empty);
+}
+
+static GStrv
 supported_languages (void)
 {
-  g_autoptr(GSettings) settings = g_settings_new ("com.endlessm.DiscoveryFeed");
   GPtrArray *languages = g_ptr_array_new ();
   const gchar * const *system_languages = g_get_language_names ();
-  g_auto(GStrv) force_additional_languages = g_settings_get_strv (settings,
-                                                                  "force-additional-languages");
+  g_auto(GStrv) force_additional_languages = get_force_additional_languages_from_gsettings ();
   const gchar * const *iter = NULL;
 
   for (iter = system_languages; *iter != NULL; ++iter)
@@ -501,8 +518,8 @@ lookup_providers (GCancellable  *cancellable,
 
 static void
 lookup_providers_thread (GTask        *task,
-                         gpointer      source,
-                         gpointer      task_data,
+                         gpointer      source G_GNUC_UNUSED,
+                         gpointer      task_data G_GNUC_UNUSED,
                          GCancellable *cancellable)
 {
   g_autoptr(GError) local_error = NULL;

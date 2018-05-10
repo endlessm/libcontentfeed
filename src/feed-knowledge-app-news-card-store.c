@@ -38,16 +38,12 @@ enum {
   NPROPS
 };
 
-static GParamSpec *eos_discovery_feed_knowledge_app_news_card_store_props [NPROPS] = { NULL, };
-
 static void
 eos_discovery_feed_knowledge_app_news_card_store_get_property (GObject    *object,
                                                                guint       prop_id,
                                                                GValue     *value,
                                                                GParamSpec *pspec)
 {
-  EosDiscoveryFeedKnowledgeAppNewsCardStore *store = EOS_DISCOVERY_FEED_KNOWLEDGE_APP_NEWS_CARD_STORE (object);
-
   switch (prop_id)
     {
     case PROP_TYPE:
@@ -59,12 +55,12 @@ eos_discovery_feed_knowledge_app_news_card_store_get_property (GObject    *objec
 }
 
 static void
-eos_discovery_feed_knowledge_app_news_card_store_init (EosDiscoveryFeedKnowledgeAppNewsCardStore *store)
+eos_discovery_feed_knowledge_app_news_card_store_init (EosDiscoveryFeedKnowledgeAppNewsCardStore *store G_GNUC_UNUSED)
 {
 }
 
 static void
-base_card_store_iface_init (EosDiscoveryFeedBaseCardStoreInterface *iface)
+base_card_store_iface_init (EosDiscoveryFeedBaseCardStoreInterface *iface G_GNUC_UNUSED)
 {
 }
 
@@ -90,7 +86,8 @@ eos_discovery_feed_knowledge_app_news_card_store_new (const gchar               
                                                       const gchar                         *knowledge_search_object_path,
                                                       const gchar                         *knowledge_app_news_id,
                                                       EosDiscoveryFeedCardLayoutDirection  layout_direction,
-                                                      guint                                thumbnail_size)
+                                                      guint                                thumbnail_size,
+                                                      const gchar                         *thumbnail_uri)
 {
   return g_object_new (EOS_DISCOVERY_FEED_TYPE_KNOWLEDGE_APP_NEWS_CARD_STORE,
                        "title", title,
@@ -103,5 +100,6 @@ eos_discovery_feed_knowledge_app_news_card_store_new (const gchar               
                        "knowledge-app-id", knowledge_app_news_id,
                        "layout-direction", layout_direction,
                        "thumbnail-size", thumbnail_size,
+                       "thumbnail-uri", thumbnail_uri,
                        NULL);
 }

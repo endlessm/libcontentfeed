@@ -1,0 +1,6 @@
+{
+    global:
+        eos_discovery_feed_*;
+    local:
+        *;
+};

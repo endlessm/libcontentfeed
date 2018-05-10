@@ -49,22 +49,16 @@ typedef GSList * (*ModelsFromResultsAndShardsFunc) (const char * const *shards,
 typedef GObject * (*ModelFromResultFunc) (GVariant *model_variant,
                                           gpointer  user_data);
 
-static GSList *
+static gboolean
 call_dbus_proxy_and_construct_from_models_and_shards (GDBusProxy                      *proxy,
                                                       const gchar                     *method_name,
-                                                      const gchar                     *source_name,
                                                       ModelsFromResultsAndShardsFunc   marshal_func,
                                                       gpointer                         marshal_data,
                                                       GCancellable                    *cancellable,
+                                                      gpointer                        *out_result,
                                                       GError                         **error)
 {
-  g_autoptr(GVariant) result = g_dbus_proxy_call_sync (proxy,
-                                                       method_name,
-                                                       NULL,
-                                                       G_DBUS_CALL_FLAGS_NONE,
-                                                       -1,
-                                                       cancellable,
-                                                       error);
+  g_autoptr(GVariant) result = NULL;
   g_autoptr(GVariant) shards_variant = NULL;
   g_autoptr(GVariant) models_variant = NULL;
   g_auto(GStrv) shards_strv = NULL;
@@ -72,8 +66,18 @@ call_dbus_proxy_and_construct_from_models_and_shards (GDBusProxy                
   GVariantIter iter;
   GVariant *model_variant = NULL;
 
+  g_return_val_if_fail (out_result != NULL, FALSE);
+
+  result = g_dbus_proxy_call_sync (proxy,
+                                   method_name,
+                                   NULL,
+                                   G_DBUS_CALL_FLAGS_NONE,
+                                   -1,
+                                   cancellable,
+                                   error);
+
   if (result == NULL)
-    return NULL;
+    return FALSE;
 
   g_variant_get (result, "(^as@aa{ss})", &shards_strv, &models_variant);
 
@@ -86,38 +90,44 @@ call_dbus_proxy_and_construct_from_models_and_shards (GDBusProxy                
                      model_variant);
 
   /* Now that we have the models and shards, we can marshal them into
-   * a GPtrArray containing the discovery-feed models */
-  return marshal_func ((const gchar * const *) shards_strv,
-                       model_props_variants,
-                       marshal_data);
+   * a GSList containing the discovery-feed models */
+  *out_result = marshal_func ((const gchar * const *) shards_strv,
+                              model_props_variants,
+                              marshal_data);
+  return TRUE;
 }
 
-static GObject *
+static gboolean
 call_dbus_proxy_and_construct_from_model (GDBusProxy           *proxy,
                                           const gchar          *method_name,
-                                          const gchar          *source_name,
                                           ModelFromResultFunc   marshal_func,
                                           gpointer              marshal_data,
                                           GCancellable         *cancellable,
+                                          gpointer             *out_result,
                                           GError              **error)
 {
-  g_autoptr(GVariant) result = g_dbus_proxy_call_sync (proxy,
-                                                       method_name,
-                                                       NULL,
-                                                       G_DBUS_CALL_FLAGS_NONE,
-                                                       -1,
-                                                       cancellable,
-                                                       error);
+  g_autoptr(GVariant) result = NULL;
   g_autoptr(GVariant) model_variant = NULL;
 
+  g_return_val_if_fail (out_result != NULL, FALSE);
+
+  result = g_dbus_proxy_call_sync (proxy,
+                                   method_name,
+                                   NULL,
+                                   G_DBUS_CALL_FLAGS_NONE,
+                                   -1,
+                                   cancellable,
+                                   error);
+
   if (result == NULL)
-    return NULL;
+    return FALSE;
 
   g_variant_get (result, "(@a{ss})", &model_variant);
 
   /* Now that we have the model, we can marshal it into a
    * GObject */
-  return marshal_func (model_variant, marshal_data);
+  *out_result = marshal_func (model_variant, marshal_data);
+  return TRUE;
 }
 
 static gchar *
@@ -196,7 +206,8 @@ typedef EosDiscoveryFeedKnowledgeAppCardStore * (*EosDiscoveryFeedKnowledgeAppCa
                                                                                                      const gchar                         *knowledge_search_object_path,
                                                                                                      const gchar                         *knowledge_app_id,
                                                                                                      EosDiscoveryFeedCardLayoutDirection  layout_direction,
-                                                                                                     guint                                thumbnail_size);
+                                                                                                     guint                                thumbnail_size,
+                                                                                                     const gchar                         *thumbnail_uri);
 
 
 typedef struct _ArticleCardsFromShardsAndItemsData
@@ -283,7 +294,8 @@ article_cards_from_shards_and_items (const char * const *shards_strv,
                        eos_discovery_feed_knowledge_app_proxy_get_knowledge_search_object_path (data->ka_proxy),
                        eos_discovery_feed_knowledge_app_proxy_get_knowledge_app_id (data->ka_proxy),
                        data->direction ? data->direction : EOS_DISCOVERY_FEED_CARD_LAYOUT_DIRECTION_IMAGE_FIRST,
-                       data->thumbnail_size);
+                       data->thumbnail_size,
+                       thumbnail_uri);
       orderable_stores = g_slist_prepend (orderable_stores,
                                           eos_discovery_feed_orderable_model_new (EOS_DISCOVERY_FEED_BASE_CARD_STORE (store),
                                                                                   data->type,
@@ -332,10 +344,11 @@ append_discovery_feed_content_from_proxy_data_free (AppendDiscoveryFeedContentFr
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (AppendDiscoveryFeedContentFromProxyData,
                                append_discovery_feed_content_from_proxy_data_free)
 
-static gpointer
+static gboolean
 append_discovery_feed_content_from_proxy (EosDiscoveryFeedKnowledgeAppProxy  *ka_proxy,
                                           gpointer                            proxy_data,
                                           GCancellable                       *cancellable,
+                                          gpointer                           *out_result,
                                           GError                            **error)
 {
   g_autoptr(AppendDiscoveryFeedContentFromProxyData) data = proxy_data;
@@ -345,14 +358,13 @@ append_discovery_feed_content_from_proxy (EosDiscoveryFeedKnowledgeAppProxy  *ka
                                                                                                              data->thumbnail_size,
                                                                                                              data->factory);
   GDBusProxy *dbus_proxy = eos_discovery_feed_knowledge_app_proxy_get_dbus_proxy (ka_proxy);
-  const gchar *desktop_id = eos_discovery_feed_knowledge_app_proxy_get_desktop_id (ka_proxy);
 
   return call_dbus_proxy_and_construct_from_models_and_shards (dbus_proxy,
                                                                data->method,
-                                                               desktop_id,
                                                                article_cards_from_shards_and_items,
                                                                marshal_data,
                                                                cancellable,
+                                                               out_result,
                                                                error);
 }
 
@@ -360,7 +372,7 @@ static gboolean
 parse_int64_with_limits (const gchar  *str,
                          guint         base,
                          gint64        min,
-                         guint64       max,
+                         gint64        max,
                          gint64       *out,
                          GError      **error)
 {
@@ -387,8 +399,8 @@ parse_int64_with_limits (const gchar  *str,
       g_set_error (error,
                    G_IO_ERROR,
                    G_IO_ERROR_FAILED,
-                   "Parsing of integer failed, %lli is not "
-                   "in the range of %lli - %lli",
+                   "Parsing of integer failed, %li is not "
+                   "in the range of %li - %li",
                    ret,
                    min,
                    max);
@@ -421,9 +433,9 @@ parse_duration (const gchar  *duration,
   seconds = floor (((gint64) total_seconds) % 60);
 
   if (hours > 0)
-    return g_strdup_printf ("%lli:%02lli:%02lli", hours, minutes, seconds);
+    return g_strdup_printf ("%li:%02li:%02li", hours, minutes, seconds);
 
-  return g_strdup_printf ("%lli:%02lli", minutes, seconds);
+  return g_strdup_printf ("%li:%02li", minutes, seconds);
 }
 
 static GSList *
@@ -467,7 +479,8 @@ video_cards_from_shards_and_items (const char * const *shards_strv,
                                                                      eos_discovery_feed_knowledge_app_proxy_get_desktop_id (ka_proxy),
                                                                      g_dbus_proxy_get_name (dbus_proxy),
                                                                      eos_discovery_feed_knowledge_app_proxy_get_knowledge_search_object_path (ka_proxy),
-                                                                     eos_discovery_feed_knowledge_app_proxy_get_knowledge_app_id (ka_proxy));
+                                                                     eos_discovery_feed_knowledge_app_proxy_get_knowledge_app_id (ka_proxy),
+                                                                     thumbnail_uri);
       orderable_stores = g_slist_prepend (orderable_stores,
                                           eos_discovery_feed_orderable_model_new (EOS_DISCOVERY_FEED_BASE_CARD_STORE (store),
                                                                                   EOS_DISCOVERY_FEED_CARD_STORE_TYPE_VIDEO_CARD,
@@ -477,21 +490,21 @@ video_cards_from_shards_and_items (const char * const *shards_strv,
     return g_steal_pointer (&orderable_stores);
 }
 
-static gpointer
+static gboolean
 append_discovery_feed_video_from_proxy (EosDiscoveryFeedKnowledgeAppProxy  *ka_proxy,
-                                        gpointer                            proxy_data,
+                                        gpointer                            proxy_data G_GNUC_UNUSED,
                                         GCancellable                       *cancellable,
+                                        gpointer                           *out_result,
                                         GError                            **error)
 {
   GDBusProxy *dbus_proxy = eos_discovery_feed_knowledge_app_proxy_get_dbus_proxy (ka_proxy);
-  const gchar *desktop_id = eos_discovery_feed_knowledge_app_proxy_get_desktop_id (ka_proxy);
 
   return call_dbus_proxy_and_construct_from_models_and_shards (dbus_proxy,
                                                                "GetVideos",
-                                                               desktop_id,
                                                                video_cards_from_shards_and_items,
                                                                ka_proxy,
                                                                cancellable,
+                                                               out_result,
                                                                error);
 }
 
@@ -527,7 +540,8 @@ artwork_cards_from_shards_and_items (const char * const *shards_strv,
                                                                  eos_discovery_feed_knowledge_app_proxy_get_knowledge_search_object_path (ka_proxy),
                                                                  eos_discovery_feed_knowledge_app_proxy_get_knowledge_app_id (ka_proxy),
                                                                  EOS_DISCOVERY_FEED_CARD_LAYOUT_DIRECTION_IMAGE_FIRST,
-                                                                 EOS_DISCOVERY_FEED_THUMBNAIL_SIZE_ARTWORK);
+                                                                 EOS_DISCOVERY_FEED_THUMBNAIL_SIZE_ARTWORK,
+                                                                 thumbnail_uri);
       orderable_stores = g_slist_prepend (orderable_stores,
                                           eos_discovery_feed_orderable_model_new (EOS_DISCOVERY_FEED_BASE_CARD_STORE (store),
                                                                                   EOS_DISCOVERY_FEED_CARD_STORE_TYPE_ARTWORK_CARD,
@@ -537,27 +551,28 @@ artwork_cards_from_shards_and_items (const char * const *shards_strv,
     return g_steal_pointer (&orderable_stores);
 }
 
-static gpointer
+static gboolean
 append_discovery_feed_artwork_from_proxy (EosDiscoveryFeedKnowledgeAppProxy  *ka_proxy,
-                                          gpointer                            proxy_data,
+                                          gpointer                            proxy_data G_GNUC_UNUSED,
                                           GCancellable                       *cancellable,
+                                          gpointer                           *out_result,
                                           GError                            **error)
 {
   GDBusProxy *dbus_proxy = eos_discovery_feed_knowledge_app_proxy_get_dbus_proxy (ka_proxy);
-  const gchar *desktop_id = eos_discovery_feed_knowledge_app_proxy_get_desktop_id (ka_proxy);
 
   return call_dbus_proxy_and_construct_from_models_and_shards (dbus_proxy,
                                                                "ArtworkCardDescriptions",
-                                                               desktop_id,
                                                                artwork_cards_from_shards_and_items,
                                                                ka_proxy,
                                                                cancellable,
+                                                               out_result,
                                                                error);
 }
 
-typedef gpointer (*AppendStoresFromProxyFunc) (EosDiscoveryFeedKnowledgeAppProxy  *ka_proxy,
+typedef gboolean (*AppendStoresFromProxyFunc) (EosDiscoveryFeedKnowledgeAppProxy  *ka_proxy,
                                                gpointer                            proxy_data,
                                                GCancellable                       *cancellable,
+                                               gpointer                           *out_result,
                                                GError                            **error);
 
 typedef struct _AppendStoresTaskData
@@ -597,19 +612,19 @@ G_DEFINE_AUTOPTR_CLEANUP_FUNC (AppendStoresTaskData,
 
 static void
 append_stores_task_from_proxy_thread (GTask        *task,
-                                      gpointer      source,
+                                      gpointer      source G_GNUC_UNUSED,
                                       gpointer      task_data,
                                       GCancellable *cancellable)
 {
   AppendStoresTaskData *data = task_data;
   g_autoptr(GError) local_error = NULL;
+  gpointer results = NULL;
 
-  gpointer results = data->proxy_func (data->ka_proxy,
-                                       data->proxy_data,
-                                       cancellable,
-                                       &local_error);
-
-  if (results == NULL)
+  if (!data->proxy_func (data->ka_proxy,
+                         data->proxy_data,
+                         cancellable,
+                         &results,
+                         &local_error))
     {
       g_task_return_error (task, g_steal_pointer (&local_error));
       return;
@@ -647,7 +662,7 @@ object_slist_free (GSList *slist)
 }
 
 static void
-marshal_word_quote_into_store (GObject      *source,
+marshal_word_quote_into_store (GObject      *source G_GNUC_UNUSED,
                                GAsyncResult *result,
                                gpointer      user_data)
 {
@@ -710,7 +725,7 @@ marshal_word_quote_into_store (GObject      *source,
 
 static GObject *
 word_card_from_item (GVariant *model_props,
-                     gpointer  user_data)
+                     gpointer  user_data G_GNUC_UNUSED)
 {
   const gchar *word = lookup_string_in_dict_variant (model_props, "word");
   const gchar *part_of_speech = lookup_string_in_dict_variant (model_props, "part_of_speech");
@@ -721,27 +736,26 @@ word_card_from_item (GVariant *model_props,
                                                            definition));
 }
 
-static gpointer
+static gboolean
 append_discovery_feed_word_from_proxy (EosDiscoveryFeedKnowledgeAppProxy  *ka_proxy,
-                                       gpointer                            proxy_data,
+                                       gpointer                            proxy_data G_GNUC_UNUSED,
                                        GCancellable                       *cancellable,
+                                       gpointer                           *out_result,
                                        GError                            **error)
 {
   GDBusProxy *dbus_proxy = eos_discovery_feed_knowledge_app_proxy_get_dbus_proxy (ka_proxy);
-  const gchar *desktop_id = eos_discovery_feed_knowledge_app_proxy_get_desktop_id (ka_proxy);
-
   return call_dbus_proxy_and_construct_from_model (dbus_proxy,
                                                    "GetWordOfTheDay",
-                                                   desktop_id,
                                                    word_card_from_item,
                                                    NULL,
                                                    cancellable,
+                                                   out_result,
                                                    error);
 }
 
 static GObject *
 quote_card_from_item (GVariant *model_props,
-                      gpointer  user_data)
+                      gpointer  user_data G_GNUC_UNUSED)
 {
   const gchar *title = lookup_string_in_dict_variant (model_props, "title");
   const gchar *author = lookup_string_in_dict_variant (model_props, "author");
@@ -749,21 +763,21 @@ quote_card_from_item (GVariant *model_props,
   return G_OBJECT (eos_discovery_feed_quote_card_store_new (title, author));
 }
 
-static gpointer
+static gboolean
 append_discovery_feed_quote_from_proxy (EosDiscoveryFeedKnowledgeAppProxy  *ka_proxy,
-                                        gpointer                            proxy_data,
+                                        gpointer                            proxy_data G_GNUC_UNUSED,
                                         GCancellable                       *cancellable,
+                                        gpointer                           *out_result,
                                         GError                            **error)
 {
   GDBusProxy *dbus_proxy = eos_discovery_feed_knowledge_app_proxy_get_dbus_proxy (ka_proxy);
-  const gchar *desktop_id = eos_discovery_feed_knowledge_app_proxy_get_desktop_id (ka_proxy);
 
   return call_dbus_proxy_and_construct_from_model (dbus_proxy,
                                                    "GetQuoteOfTheDay",
-                                                   desktop_id,
                                                    quote_card_from_item,
                                                    NULL,
                                                    cancellable,
+                                                   out_result,
                                                    error);
 }
 
@@ -880,7 +894,7 @@ unordered_card_arrays_from_queries (GPtrArray           *ka_proxies,
 }
 
 static void
-received_all_unordered_card_array_results_from_queries (GObject      *source,
+received_all_unordered_card_array_results_from_queries (GObject      *source G_GNUC_UNUSED,
                                                         GAsyncResult *result,
                                                         gpointer      user_data)
 {

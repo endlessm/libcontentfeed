@@ -23,11 +23,6 @@ G_DEFINE_INTERFACE (EosDiscoveryFeedBaseCardStore,
                     G_TYPE_OBJECT)
 
 static void
-eos_discovery_feed_base_card_store_init (EosDiscoveryFeedBaseCardStore *store)
-{
-}
-
-static void
 eos_discovery_feed_base_card_store_default_init (EosDiscoveryFeedBaseCardStoreInterface *iface)
 {
   g_object_interface_install_property (iface,

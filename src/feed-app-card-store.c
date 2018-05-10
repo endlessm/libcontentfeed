@@ -90,7 +90,7 @@ eos_discovery_feed_app_card_store_finalize (GObject *object)
 }
 
 static void
-eos_discovery_feed_app_card_store_init (EosDiscoveryFeedAppCardStore *store)
+eos_discovery_feed_app_card_store_init (EosDiscoveryFeedAppCardStore *store G_GNUC_UNUSED)
 {
 }
 

@@ -98,7 +98,7 @@ eos_discovery_feed_quote_card_store_finalize (GObject *object)
 }
 
 static void
-eos_discovery_feed_quote_card_store_init (EosDiscoveryFeedQuoteCardStore *store)
+eos_discovery_feed_quote_card_store_init (EosDiscoveryFeedQuoteCardStore *store G_GNUC_UNUSED)
 {
 }
 
