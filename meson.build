@@ -1,10 +1,10 @@
 # Copyright 2018 Endless Mobile, Inc.
 
-libtool_version = '0.0.0'
-
-project('contentfeed', 'c', version: libtool_version, license: 'LGPL2.1+',
+project('contentfeed', 'c', version: '0.0.0', license: 'LGPL2.1+',
     meson_version: '>= 0.42.0',
     default_options: ['c_std=c99', 'warning_level=3'])
+
+libtool_version = '0.0.0'
 
 gnome = import('gnome')
 i18n = import('i18n')
