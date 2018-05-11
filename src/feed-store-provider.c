@@ -207,7 +207,8 @@ typedef EosDiscoveryFeedKnowledgeAppCardStore * (*EosDiscoveryFeedKnowledgeAppCa
                                                                                                      const gchar                         *knowledge_app_id,
                                                                                                      EosDiscoveryFeedCardLayoutDirection  layout_direction,
                                                                                                      guint                                thumbnail_size,
-                                                                                                     const gchar                         *thumbnail_uri);
+                                                                                                     const gchar                         *thumbnail_uri,
+                                                                                                     const gchar                           *content_type);
 
 
 typedef struct _ArticleCardsFromShardsAndItemsData
@@ -280,6 +281,8 @@ article_cards_from_shards_and_items (const char * const *shards_strv,
       const gchar *ekn_id = lookup_string_in_dict_variant (model_props, "ekn_id");
       const gchar *thumbnail_uri = lookup_string_in_dict_variant (model_props,
                                                                   "thumbnail_uri");
+      const gchar *content_type = lookup_string_in_dict_variant (model_props,
+                                                                 "content_type");
       g_autoptr(GInputStream) thumbnail_stream =
         find_thumbnail_stream_in_shards (shards_strv, thumbnail_uri);
       GDBusProxy *dbus_proxy = eos_discovery_feed_knowledge_app_proxy_get_dbus_proxy (data->ka_proxy);
@@ -295,7 +298,8 @@ article_cards_from_shards_and_items (const char * const *shards_strv,
                        eos_discovery_feed_knowledge_app_proxy_get_knowledge_app_id (data->ka_proxy),
                        data->direction ? data->direction : EOS_DISCOVERY_FEED_CARD_LAYOUT_DIRECTION_IMAGE_FIRST,
                        data->thumbnail_size,
-                       thumbnail_uri);
+                       thumbnail_uri,
+                       content_type);
       orderable_stores = g_slist_prepend (orderable_stores,
                                           eos_discovery_feed_orderable_model_new (EOS_DISCOVERY_FEED_BASE_CARD_STORE (store),
                                                                                   data->type,
@@ -457,6 +461,8 @@ video_cards_from_shards_and_items (const char * const *shards_strv,
                                                                   "thumbnail_uri");
       const gchar *title = lookup_string_in_dict_variant (model_props, "title");
       const gchar *ekn_id = lookup_string_in_dict_variant (model_props, "ekn_id");
+      const gchar *content_type = lookup_string_in_dict_variant (model_props,
+                                                                 "content_type");
       g_autofree gchar *duration = parse_duration (in_duration, &local_error);
       g_autoptr(GInputStream) thumbnail_stream = NULL;
       EosDiscoveryFeedKnowledgeAppVideoCardStore *store = NULL;
@@ -480,7 +486,8 @@ video_cards_from_shards_and_items (const char * const *shards_strv,
                                                                      g_dbus_proxy_get_name (dbus_proxy),
                                                                      eos_discovery_feed_knowledge_app_proxy_get_knowledge_search_object_path (ka_proxy),
                                                                      eos_discovery_feed_knowledge_app_proxy_get_knowledge_app_id (ka_proxy),
-                                                                     thumbnail_uri);
+                                                                     thumbnail_uri,
+                                                                     content_type);
       orderable_stores = g_slist_prepend (orderable_stores,
                                           eos_discovery_feed_orderable_model_new (EOS_DISCOVERY_FEED_BASE_CARD_STORE (store),
                                                                                   EOS_DISCOVERY_FEED_CARD_STORE_TYPE_VIDEO_CARD,
@@ -525,6 +532,7 @@ artwork_cards_from_shards_and_items (const char * const *shards_strv,
       const gchar *title = lookup_string_in_dict_variant (model_props, "title");
       const gchar *ekn_id = lookup_string_in_dict_variant (model_props, "ekn_id");
       const gchar *author = lookup_string_in_dict_variant (model_props, "author");
+      const gchar *content_type = lookup_string_in_dict_variant (model_props, "content_type");
       g_autoptr(GInputStream) thumbnail_stream =
         find_thumbnail_stream_in_shards (shards_strv, thumbnail_uri);
       GDBusProxy *dbus_proxy = eos_discovery_feed_knowledge_app_proxy_get_dbus_proxy (ka_proxy);
@@ -541,7 +549,8 @@ artwork_cards_from_shards_and_items (const char * const *shards_strv,
                                                                  eos_discovery_feed_knowledge_app_proxy_get_knowledge_app_id (ka_proxy),
                                                                  EOS_DISCOVERY_FEED_CARD_LAYOUT_DIRECTION_IMAGE_FIRST,
                                                                  EOS_DISCOVERY_FEED_THUMBNAIL_SIZE_ARTWORK,
-                                                                 thumbnail_uri);
+                                                                 thumbnail_uri,
+                                                                 content_type);
       orderable_stores = g_slist_prepend (orderable_stores,
                                           eos_discovery_feed_orderable_model_new (EOS_DISCOVERY_FEED_BASE_CARD_STORE (store),
                                                                                   EOS_DISCOVERY_FEED_CARD_STORE_TYPE_ARTWORK_CARD,

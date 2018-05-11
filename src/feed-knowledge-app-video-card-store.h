@@ -35,6 +35,7 @@ EosDiscoveryFeedKnowledgeAppVideoCardStore * eos_discovery_feed_knowledge_app_vi
                                                                                                     const gchar  *bus_name,
                                                                                                     const gchar  *knowledge_search_object_path,
                                                                                                     const gchar  *knowledge_app_id,
-                                                                                                    const gchar  *thumbnail_uri);
+                                                                                                    const gchar  *thumbnail_uri,
+                                                                                                    const gchar  *content_type);
 
 G_END_DECLS
