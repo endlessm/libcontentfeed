@@ -208,7 +208,7 @@ typedef EosDiscoveryFeedKnowledgeAppCardStore * (*EosDiscoveryFeedKnowledgeAppCa
                                                                                                      EosDiscoveryFeedCardLayoutDirection  layout_direction,
                                                                                                      guint                                thumbnail_size,
                                                                                                      const gchar                         *thumbnail_uri,
-                                                                                                     const gchar                           *content_type);
+                                                                                                     const gchar                         *content_type);
 
 
 typedef struct _ArticleCardsFromShardsAndItemsData
