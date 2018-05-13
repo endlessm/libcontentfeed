@@ -39,7 +39,7 @@ EosDiscoveryFeedKnowledgeAppArtworkCardStore * eos_discovery_feed_knowledge_app_
                                                                                                         EosDiscoveryFeedCardLayoutDirection  layout_direction,
                                                                                                         guint                                thumbnail_size,
                                                                                                         const gchar                         *thumbnail_uri,
-                                                                                                        const gchar                        *content_type);
+                                                                                                        const gchar                         *content_type);
 
 
 
