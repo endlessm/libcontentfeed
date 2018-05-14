@@ -1,3 +1,9 @@
+libcontentfeed (0.1.0) eos; urgency=low
+
+  * New release
+
+ -- Cosimo Cecchi <cosimo@endlessm.com>  Mon, 14 May 2018 14:35:11 -0800
+
 libcontentfeed (0.0.0) eos; urgency=low
 
   * Initial release
