@@ -76,9 +76,7 @@ main_library = library('@0@-@1@'.format(meson.project_name(), api_version),
     dependencies: [eos_shard, gio, gio_unix, glib, gobject, libsoup, m_dep],
     install: true,
     link_depends: '@0@.map'.format(meson.project_name()),
-    name_prefix: '',
-    soversion: api_version,
-    version: libtool_version)
+    soversion: api_version, version: libtool_version)
 
 introspection_sources = [sources, enum_sources, installed_headers]
 
