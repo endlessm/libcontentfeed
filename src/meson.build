@@ -75,7 +75,7 @@ main_library = library('@0@-@1@'.format(meson.project_name(), api_version),
     c_args: ['-DG_LOG_DOMAIN="@0@"'.format(namespace_name), '-DCOMPILING_LIBCONTENTFEED'],
     dependencies: [eos_shard, gio, gio_unix, glib, gobject, libsoup, m_dep],
     install: true,
-    link_depends: 'lib@0@.map'.format(meson.project_name()),
+    link_depends: '@0@.map'.format(meson.project_name()),
     soversion: api_version, version: libtool_version)
 
 introspection_sources = [sources, enum_sources, installed_headers]
