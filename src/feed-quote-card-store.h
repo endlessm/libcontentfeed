@@ -21,10 +21,10 @@
 
 G_BEGIN_DECLS
 
-#define EOS_DISCOVERY_FEED_TYPE_QUOTE_CARD_STORE eos_discovery_feed_quote_card_store_get_type ()
-G_DECLARE_FINAL_TYPE (EosDiscoveryFeedQuoteCardStore, eos_discovery_feed_quote_card_store, EOS_DISCOVERY_FEED, QUOTE_CARD_STORE, GObject)
+#define CONTENT_FEED_TYPE_QUOTE_CARD_STORE content_feed_quote_card_store_get_type ()
+G_DECLARE_FINAL_TYPE (ContentFeedQuoteCardStore, content_feed_quote_card_store, CONTENT_FEED, QUOTE_CARD_STORE, GObject)
 
-EosDiscoveryFeedQuoteCardStore * eos_discovery_feed_quote_card_store_new (const gchar *quote,
-                                                                          const gchar *author);
+ContentFeedQuoteCardStore * content_feed_quote_card_store_new (const gchar *quote,
+                                                               const gchar *author);
 
 G_END_DECLS

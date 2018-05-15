@@ -18,18 +18,18 @@
 #include "feed-base-card-store.h"
 #include "feed-enums.h"
 
-G_DEFINE_INTERFACE (EosDiscoveryFeedBaseCardStore,
-                    eos_discovery_feed_base_card_store,
+G_DEFINE_INTERFACE (ContentFeedBaseCardStore,
+                    content_feed_base_card_store,
                     G_TYPE_OBJECT)
 
 static void
-eos_discovery_feed_base_card_store_default_init (EosDiscoveryFeedBaseCardStoreInterface *iface)
+content_feed_base_card_store_default_init (ContentFeedBaseCardStoreInterface *iface)
 {
   g_object_interface_install_property (iface,
                                        g_param_spec_enum ("type",
                                                           "Card Type",
                                                           "The type of card",
-                                                          EOS_TYPE_DISCOVERY_FEED_CARD_STORE_TYPE,
-                                                          EOS_DISCOVERY_FEED_CARD_STORE_TYPE_UNSET,
+                                                          CONTENT_FEED_TYPE_CONTENT_FEED_CARD_STORE_TYPE,
+                                                          CONTENT_FEED_CARD_STORE_TYPE_UNSET,
                                                           G_PARAM_READABLE));
 }

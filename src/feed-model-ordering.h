@@ -21,12 +21,12 @@
 
 G_BEGIN_DECLS
 
-typedef enum _EosDiscoveryFeedArrangeOrderableModelsFlags {
-  EOS_DISCOVERY_FEED_ARRANGE_ORDERABLE_MODEL_FLAGS_INCLUDE_INSTALLABLE_APPS = (1 << 0)
-} EosDiscoveryFeedArrangeOrderableModelsFlags;
+typedef enum _ContentFeedArrangeOrderableModelsFlags {
+  CONTENT_FEED_ARRANGE_ORDERABLE_MODEL_FLAGS_INCLUDE_INSTALLABLE_APPS = (1 << 0)
+} ContentFeedArrangeOrderableModelsFlags;
 
-GPtrArray * eos_discovery_feed_arrange_orderable_models (GPtrArray                                  *unordered_orderable_models,
-                                                         EosDiscoveryFeedArrangeOrderableModelsFlags flags);
+GPtrArray * content_feed_arrange_orderable_models (GPtrArray                              *unordered_orderable_models,
+                                                   ContentFeedArrangeOrderableModelsFlags  flags);
 
 
 G_END_DECLS

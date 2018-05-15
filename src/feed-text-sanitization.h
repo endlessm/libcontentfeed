@@ -21,6 +21,6 @@
 
 G_BEGIN_DECLS
 
-gchar * eos_discovery_feed_sanitize_synopsis (const gchar *synopsis);
+gchar * content_feed_sanitize_synopsis (const gchar *synopsis);
 
 G_END_DECLS

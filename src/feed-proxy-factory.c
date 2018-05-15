@@ -120,17 +120,17 @@ lookup_metadata_for_interface_name (const gchar *interface_name)
 
 typedef struct _InstantiateProxyForInterfaceData
 {
-  GDBusConnection              *connection;
-  EosDiscoveryFeedProviderInfo *provider_info;
-  gchar                        *interface_name;
-  const gchar                  *interface_metadata;
+  GDBusConnection         *connection;
+  ContentFeedProviderInfo *provider_info;
+  gchar                   *interface_name;
+  const gchar             *interface_metadata;
 } InstantiateProxyForInterfaceData;
 
 static InstantiateProxyForInterfaceData *
-instantiate_proxy_for_interface_data_new (GDBusConnection              *connection,
-                                          EosDiscoveryFeedProviderInfo *provider_info,
-                                          const gchar                  *interface_name,
-                                          const gchar                  *interface_metadata)
+instantiate_proxy_for_interface_data_new (GDBusConnection         *connection,
+                                          ContentFeedProviderInfo *provider_info,
+                                          const gchar             *interface_name,
+                                          const gchar             *interface_metadata)
 {
   InstantiateProxyForInterfaceData *data = g_new0 (InstantiateProxyForInterfaceData, 1);
 
@@ -154,13 +154,13 @@ instantiate_proxy_for_interface_data_free (InstantiateProxyForInterfaceData *dat
   g_free (data);
 }
 
-static EosDiscoveryFeedKnowledgeAppProxy *
-instantiate_proxy_for_interface_sync (GDBusConnection               *connection,
-                                      EosDiscoveryFeedProviderInfo  *provider_info,
-                                      const gchar                   *interface_name,
-                                      const gchar                   *interface_metadata,
-                                      GCancellable                  *cancellable,
-                                      GError                       **error)
+static ContentFeedKnowledgeAppProxy *
+instantiate_proxy_for_interface_sync (GDBusConnection          *connection,
+                                      ContentFeedProviderInfo  *provider_info,
+                                      const gchar              *interface_name,
+                                      const gchar              *interface_metadata,
+                                      GCancellable             *cancellable,
+                                      GError                  **error)
 {
   g_autoptr(GDBusNodeInfo) node_info = g_dbus_node_info_new_for_xml (interface_metadata,
                                                                      error);
@@ -182,11 +182,11 @@ instantiate_proxy_for_interface_sync (GDBusConnection               *connection,
    * the methods that we would like it to support. */
   interface_info = g_dbus_node_info_lookup_interface (node_info, interface_name);
 
-  bus_name = eos_discovery_feed_provider_info_get_bus_name (provider_info);
-  object_path = eos_discovery_feed_provider_info_get_object_path (provider_info);
-  desktop_id = eos_discovery_feed_provider_info_get_desktop_file_id (provider_info);
-  knowledge_search_object_path = eos_discovery_feed_provider_info_get_knowledge_search_object_path (provider_info);
-  knowledge_app_id = eos_discovery_feed_provider_info_get_knowledge_app_id (provider_info);
+  bus_name = content_feed_provider_info_get_bus_name (provider_info);
+  object_path = content_feed_provider_info_get_object_path (provider_info);
+  desktop_id = content_feed_provider_info_get_desktop_file_id (provider_info);
+  knowledge_search_object_path = content_feed_provider_info_get_knowledge_search_object_path (provider_info);
+  knowledge_app_id = content_feed_provider_info_get_knowledge_app_id (provider_info);
 
   /* Make sure that the object path is valid. If it is not, return an error. This
    * will cause the current feed provider to not load with a warning but it is
@@ -213,10 +213,10 @@ instantiate_proxy_for_interface_sync (GDBusConnection               *connection,
   if (proxy == NULL)
     return NULL;
 
-  return eos_discovery_feed_knowledge_app_proxy_new (proxy,
-                                                     desktop_id,
-                                                     knowledge_search_object_path,
-                                                     knowledge_app_id);
+  return content_feed_knowledge_app_proxy_new (proxy,
+                                               desktop_id,
+                                               knowledge_search_object_path,
+                                               knowledge_app_id);
 }
 
 static void
@@ -227,7 +227,7 @@ instantiate_proxy_for_interface_thread (GTask        *task,
 {
   InstantiateProxyForInterfaceData *data = task_data;
   g_autoptr(GError) local_error = NULL;
-  g_autoptr(EosDiscoveryFeedKnowledgeAppProxy) ka_proxy =
+  g_autoptr(ContentFeedKnowledgeAppProxy) ka_proxy =
     instantiate_proxy_for_interface_sync (data->connection,
                                           data->provider_info,
                                           data->interface_name,
@@ -245,13 +245,13 @@ instantiate_proxy_for_interface_thread (GTask        *task,
 }
 
 static void
-instantiate_proxy_for_interface (GDBusConnection              *connection,
-                                 EosDiscoveryFeedProviderInfo *provider_info,
-                                 const gchar                  *interface_name,
-                                 const gchar                  *interface_metadata,
-                                 GCancellable                 *cancellable,
-                                 GAsyncReadyCallback           callback,
-                                 gpointer                      user_data)
+instantiate_proxy_for_interface (GDBusConnection         *connection,
+                                 ContentFeedProviderInfo *provider_info,
+                                 const gchar             *interface_name,
+                                 const gchar             *interface_metadata,
+                                 GCancellable            *cancellable,
+                                 GAsyncReadyCallback      callback,
+                                 gpointer                 user_data)
 {
   g_autoptr(GTask) task = g_task_new (NULL, cancellable, callback, user_data);
 
@@ -290,7 +290,7 @@ on_received_all_instantiation_results (GObject      *source G_GNUC_UNUSED,
   for (i = 0; i < instantiation_results->len; ++i)
     {
       g_autoptr(GError) instantiation_error = NULL;
-      g_autoptr(EosDiscoveryFeedKnowledgeAppProxy) ka_proxy =
+      g_autoptr(ContentFeedKnowledgeAppProxy) ka_proxy =
         g_task_propagate_pointer (G_TASK (g_ptr_array_index (instantiation_results, i)),
                                   &instantiation_error);
 
@@ -312,31 +312,31 @@ on_received_all_instantiation_results (GObject      *source G_GNUC_UNUSED,
 }
 
 /**
- * eos_discovery_feed_instantiate_proxies_from_discovery_feed_providers_finish:
+ * content_feed_instantiate_proxies_from_discovery_feed_providers_finish:
  * @result: A #GAsyncResult
  * @error: A #GError
  *
- * Complete a call to eos_discovery_feed_instantiate_proxies_from_discovery_feed_providers
- * and get a #GPtrArray of #EosDiscoveryFeedKnowledgeAppProxy that were
+ * Complete a call to content_feed_instantiate_proxies_from_discovery_feed_providers
+ * and get a #GPtrArray of #ContentFeedKnowledgeAppProxy that were
  * successfully created as a result of this call. Failures are logged
  * to the standard error.
  *
- * Returns: (transfer container) (element-type EosDiscoveryFeedKnowledgeAppProxy): A
- *          #GPtrArray of #EosDiscoveryFeedKnowledgeAppProxy or %NULL on
+ * Returns: (transfer container) (element-type ContentFeedKnowledgeAppProxy): A
+ *          #GPtrArray of #ContentFeedKnowledgeAppProxy or %NULL on
  *          failure with @error set.
  */
 GPtrArray *
-eos_discovery_feed_instantiate_proxies_from_discovery_feed_providers_finish (GAsyncResult  *result,
-                                                                             GError       **error)
+content_feed_instantiate_proxies_from_discovery_feed_providers_finish (GAsyncResult  *result,
+                                                                       GError       **error)
 {
   return g_task_propagate_pointer (G_TASK (result), error);
 }
 
 /**
- * eos_discovery_feed_instantiate_proxies_from_discovery_feed_providers:
+ * content_feed_instantiate_proxies_from_discovery_feed_providers:
  * @connection: A #GDBusConnection
- * @providers: (element-type EosDiscoveryFeedProviderInfo): A #GPtrArray of
- *             #EosDiscoveryFeedProviderInfo objects, used to construct all the
+ * @providers: (element-type ContentFeedProviderInfo): A #GPtrArray of
+ *             #ContentFeedProviderInfo objects, used to construct all the
  *             relevant proxies
  * @cancellable: A #GCancellable
  * @callback: A #GAsyncReadyCallback which will be invoked with a #GPtrArray
@@ -344,17 +344,17 @@ eos_discovery_feed_instantiate_proxies_from_discovery_feed_providers_finish (GAs
  *            proxy.
  * @user_data: Closure for @callback
  *
- * Concurrently construct each a #EosDiscoveryFeedKnowledgeAppProxy from each
- * interface specified in the array of #EosDiscoveryFeedProviderInfo objects
+ * Concurrently construct each a #ContentFeedKnowledgeAppProxy from each
+ * interface specified in the array of #ContentFeedProviderInfo objects
  * passed in @providers. The caller will need to check the result of construction
  * for each #GAsyncResult in the #GPtrArray passed to the callback.
  */
 void
-eos_discovery_feed_instantiate_proxies_from_discovery_feed_providers (GDBusConnection     *connection,
-                                                                      GPtrArray           *providers,
-                                                                      GCancellable        *cancellable,
-                                                                      GAsyncReadyCallback  callback,
-                                                                      gpointer             user_data)
+content_feed_instantiate_proxies_from_discovery_feed_providers (GDBusConnection     *connection,
+                                                                GPtrArray           *providers,
+                                                                GCancellable        *cancellable,
+                                                                GAsyncReadyCallback  callback,
+                                                                gpointer             user_data)
 {
   g_autoptr(GTask) task = g_task_new (NULL, cancellable, callback, user_data);
   AllTasksResultsClosure *all_tasks_closure = all_tasks_results_closure_new (g_object_unref,
@@ -364,8 +364,8 @@ eos_discovery_feed_instantiate_proxies_from_discovery_feed_providers (GDBusConne
 
   for (; i < providers->len; ++i)
     {
-      EosDiscoveryFeedProviderInfo *provider_info = g_ptr_array_index (providers, i);
-      const gchar * const *iter = eos_discovery_feed_provider_info_get_interfaces (provider_info);
+      ContentFeedProviderInfo *provider_info = g_ptr_array_index (providers, i);
+      const gchar * const *iter = content_feed_provider_info_get_interfaces (provider_info);
 
       for (; *iter != NULL; ++iter)
         {

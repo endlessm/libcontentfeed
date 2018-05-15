@@ -21,11 +21,11 @@
 
 G_BEGIN_DECLS
 
-GPtrArray * eos_discovery_feed_find_providers_finish (GAsyncResult  *result,
-                                                      GError       **error);
+GPtrArray * content_feed_find_providers_finish (GAsyncResult  *result,
+                                                GError       **error);
 
-void eos_discovery_feed_find_providers (GCancellable        *cancellable,
-                                        GAsyncReadyCallback  callback,
-                                        gpointer             user_data);
+void content_feed_find_providers (GCancellable        *cancellable,
+                                  GAsyncReadyCallback  callback,
+                                  gpointer             user_data);
 
 G_END_DECLS

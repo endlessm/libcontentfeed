@@ -24,18 +24,18 @@
 
 G_BEGIN_DECLS
 
-#define EOS_DISCOVERY_FEED_TYPE_KNOWLEDGE_APP_VIDEO_CARD_STORE eos_discovery_feed_knowledge_app_video_card_store_get_type ()
-G_DECLARE_FINAL_TYPE (EosDiscoveryFeedKnowledgeAppVideoCardStore, eos_discovery_feed_knowledge_app_video_card_store, EOS_DISCOVERY_FEED, KNOWLEDGE_APP_VIDEO_CARD_STORE, EosDiscoveryFeedKnowledgeAppCardStore)
+#define CONTENT_FEED_TYPE_KNOWLEDGE_APP_VIDEO_CARD_STORE content_feed_knowledge_app_video_card_store_get_type ()
+G_DECLARE_FINAL_TYPE (ContentFeedKnowledgeAppVideoCardStore, content_feed_knowledge_app_video_card_store, CONTENT_FEED, KNOWLEDGE_APP_VIDEO_CARD_STORE, ContentFeedKnowledgeAppCardStore)
 
-EosDiscoveryFeedKnowledgeAppVideoCardStore * eos_discovery_feed_knowledge_app_video_card_store_new (const gchar  *title,
-                                                                                                    const gchar  *uri,
-                                                                                                    const gchar  *duration,
-                                                                                                    GInputStream *thumbnail,
-                                                                                                    const gchar  *desktop_id,
-                                                                                                    const gchar  *bus_name,
-                                                                                                    const gchar  *knowledge_search_object_path,
-                                                                                                    const gchar  *knowledge_app_id,
-                                                                                                    const gchar  *thumbnail_uri,
-                                                                                                    const gchar  *content_type);
+ContentFeedKnowledgeAppVideoCardStore * content_feed_knowledge_app_video_card_store_new (const gchar  *title,
+                                                                                         const gchar  *uri,
+                                                                                         const gchar  *duration,
+                                                                                         GInputStream *thumbnail,
+                                                                                         const gchar  *desktop_id,
+                                                                                         const gchar  *bus_name,
+                                                                                         const gchar  *knowledge_search_object_path,
+                                                                                         const gchar  *knowledge_app_id,
+                                                                                         const gchar  *thumbnail_uri,
+                                                                                         const gchar  *content_type);
 
 G_END_DECLS

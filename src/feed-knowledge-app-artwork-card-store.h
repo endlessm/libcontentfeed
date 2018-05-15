@@ -24,22 +24,22 @@
 
 G_BEGIN_DECLS
 
-#define EOS_DISCOVERY_FEED_TYPE_KNOWLEDGE_APP_ARTWORK_CARD_STORE eos_discovery_feed_knowledge_app_artwork_card_store_get_type ()
-G_DECLARE_FINAL_TYPE (EosDiscoveryFeedKnowledgeAppArtworkCardStore, eos_discovery_feed_knowledge_app_artwork_card_store, EOS_DISCOVERY_FEED, KNOWLEDGE_APP_ARTWORK_CARD_STORE, EosDiscoveryFeedKnowledgeAppCardStore)
+#define CONTENT_FEED_TYPE_KNOWLEDGE_APP_ARTWORK_CARD_STORE content_feed_knowledge_app_artwork_card_store_get_type ()
+G_DECLARE_FINAL_TYPE (ContentFeedKnowledgeAppArtworkCardStore, content_feed_knowledge_app_artwork_card_store, CONTENT_FEED, KNOWLEDGE_APP_ARTWORK_CARD_STORE, ContentFeedKnowledgeAppCardStore)
 
-EosDiscoveryFeedKnowledgeAppArtworkCardStore * eos_discovery_feed_knowledge_app_artwork_card_store_new (const gchar                         *title,
-                                                                                                        const gchar                         *uri,
-                                                                                                        const gchar                         *author,
-                                                                                                        const gchar                         *first_date,
-                                                                                                        GInputStream                        *thumbnail,
-                                                                                                        const gchar                         *desktop_id,
-                                                                                                        const gchar                         *bus_name,
-                                                                                                        const gchar                         *knowledge_search_object_path,
-                                                                                                        const gchar                         *knowledge_app_id,
-                                                                                                        EosDiscoveryFeedCardLayoutDirection  layout_direction,
-                                                                                                        guint                                thumbnail_size,
-                                                                                                        const gchar                         *thumbnail_uri,
-                                                                                                        const gchar                         *content_type);
+ContentFeedKnowledgeAppArtworkCardStore * content_feed_knowledge_app_artwork_card_store_new (const gchar                         *title,
+                                                                                             const gchar                         *uri,
+                                                                                             const gchar                         *author,
+                                                                                             const gchar                         *first_date,
+                                                                                             GInputStream                        *thumbnail,
+                                                                                             const gchar                         *desktop_id,
+                                                                                             const gchar                         *bus_name,
+                                                                                             const gchar                         *knowledge_search_object_path,
+                                                                                             const gchar                         *knowledge_app_id,
+                                                                                             ContentFeedCardLayoutDirection       layout_direction,
+                                                                                             guint                                thumbnail_size,
+                                                                                             const gchar                         *thumbnail_uri,
+                                                                                             const gchar                         *content_type);
 
 
 

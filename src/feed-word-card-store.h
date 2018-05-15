@@ -21,11 +21,11 @@
 
 G_BEGIN_DECLS
 
-#define EOS_DISCOVERY_FEED_TYPE_WORD_CARD_STORE eos_discovery_feed_word_card_store_get_type ()
-G_DECLARE_FINAL_TYPE (EosDiscoveryFeedWordCardStore, eos_discovery_feed_word_card_store, EOS_DISCOVERY_FEED, WORD_CARD_STORE, GObject)
+#define CONTENT_FEED_TYPE_WORD_CARD_STORE content_feed_word_card_store_get_type ()
+G_DECLARE_FINAL_TYPE (ContentFeedWordCardStore, content_feed_word_card_store, CONTENT_FEED, WORD_CARD_STORE, GObject)
 
-EosDiscoveryFeedWordCardStore * eos_discovery_feed_word_card_store_new (const gchar *word,
-                                                                        const gchar *part_of_speech,
-                                                                        const gchar *definition);
+ContentFeedWordCardStore * content_feed_word_card_store_new (const gchar *word,
+                                                             const gchar *part_of_speech,
+                                                             const gchar *definition);
 
 G_END_DECLS

@@ -19,25 +19,25 @@
 #include "feed-knowledge-app-artwork-card-store.h"
 #include "feed-sizes.h"
 
-struct _EosDiscoveryFeedKnowledgeAppArtworkCardStore
+struct _ContentFeedKnowledgeAppArtworkCardStore
 {
   GObject parent_instance;
 };
 
-typedef struct _EosDiscoveryFeedKnowledgeAppArtworkCardStorePrivate
+typedef struct _ContentFeedKnowledgeAppArtworkCardStorePrivate
 {
   gchar *author;
   gchar *first_date;
-} EosDiscoveryFeedKnowledgeAppArtworkCardStorePrivate;
+} ContentFeedKnowledgeAppArtworkCardStorePrivate;
 
-static void base_card_store_iface_init (EosDiscoveryFeedBaseCardStoreInterface *iface);
+static void base_card_store_iface_init (ContentFeedBaseCardStoreInterface *iface);
 
-G_DEFINE_TYPE_WITH_CODE (EosDiscoveryFeedKnowledgeAppArtworkCardStore,
-                         eos_discovery_feed_knowledge_app_artwork_card_store,
-                         EOS_DISCOVERY_FEED_TYPE_KNOWLEDGE_APP_CARD_STORE,
-                         G_IMPLEMENT_INTERFACE (EOS_DISCOVERY_FEED_TYPE_BASE_CARD_STORE,
+G_DEFINE_TYPE_WITH_CODE (ContentFeedKnowledgeAppArtworkCardStore,
+                         content_feed_knowledge_app_artwork_card_store,
+                         CONTENT_FEED_TYPE_KNOWLEDGE_APP_CARD_STORE,
+                         G_IMPLEMENT_INTERFACE (CONTENT_FEED_TYPE_BASE_CARD_STORE,
                                                 base_card_store_iface_init)
-                         G_ADD_PRIVATE (EosDiscoveryFeedKnowledgeAppArtworkCardStore))
+                         G_ADD_PRIVATE (ContentFeedKnowledgeAppArtworkCardStore))
 
 enum {
   PROP_0,
@@ -47,16 +47,16 @@ enum {
   NPROPS
 };
 
-static GParamSpec *eos_discovery_feed_knowledge_app_artwork_card_store_props [NPROPS] = { NULL, };
+static GParamSpec *content_feed_knowledge_app_artwork_card_store_props [NPROPS] = { NULL, };
 
 static void
-eos_discovery_feed_knowledge_app_artwork_card_store_set_property (GObject      *object,
-                                                                  guint         prop_id,
-                                                                  const GValue *value,
-                                                                  GParamSpec   *pspec)
+content_feed_knowledge_app_artwork_card_store_set_property (GObject      *object,
+                                                            guint         prop_id,
+                                                            const GValue *value,
+                                                            GParamSpec   *pspec)
 {
-  EosDiscoveryFeedKnowledgeAppArtworkCardStore *store = EOS_DISCOVERY_FEED_KNOWLEDGE_APP_ARTWORK_CARD_STORE (object);
-  EosDiscoveryFeedKnowledgeAppArtworkCardStorePrivate *priv = eos_discovery_feed_knowledge_app_artwork_card_store_get_instance_private (store);
+  ContentFeedKnowledgeAppArtworkCardStore *store = CONTENT_FEED_KNOWLEDGE_APP_ARTWORK_CARD_STORE (object);
+  ContentFeedKnowledgeAppArtworkCardStorePrivate *priv = content_feed_knowledge_app_artwork_card_store_get_instance_private (store);
 
   switch (prop_id)
     {
@@ -72,18 +72,18 @@ eos_discovery_feed_knowledge_app_artwork_card_store_set_property (GObject      *
 }
 
 static void
-eos_discovery_feed_knowledge_app_artwork_card_store_get_property (GObject    *object,
-                                                                  guint       prop_id,
-                                                                  GValue     *value,
-                                                                  GParamSpec *pspec)
+content_feed_knowledge_app_artwork_card_store_get_property (GObject    *object,
+                                                            guint       prop_id,
+                                                            GValue     *value,
+                                                            GParamSpec *pspec)
 {
-  EosDiscoveryFeedKnowledgeAppArtworkCardStore *store = EOS_DISCOVERY_FEED_KNOWLEDGE_APP_ARTWORK_CARD_STORE (object);
-  EosDiscoveryFeedKnowledgeAppArtworkCardStorePrivate *priv = eos_discovery_feed_knowledge_app_artwork_card_store_get_instance_private (store);
+  ContentFeedKnowledgeAppArtworkCardStore *store = CONTENT_FEED_KNOWLEDGE_APP_ARTWORK_CARD_STORE (object);
+  ContentFeedKnowledgeAppArtworkCardStorePrivate *priv = content_feed_knowledge_app_artwork_card_store_get_instance_private (store);
 
   switch (prop_id)
     {
     case PROP_TYPE:
-      g_value_set_enum (value, EOS_DISCOVERY_FEED_CARD_STORE_TYPE_ARTWORK_CARD);
+      g_value_set_enum (value, CONTENT_FEED_CARD_STORE_TYPE_ARTWORK_CARD);
       break;
     case PROP_AUTHOR:
       g_value_set_string (value, priv->author);
@@ -97,44 +97,44 @@ eos_discovery_feed_knowledge_app_artwork_card_store_get_property (GObject    *ob
 }
 
 static void
-eos_discovery_feed_knowledge_app_artwork_card_store_finalize (GObject *object)
+content_feed_knowledge_app_artwork_card_store_finalize (GObject *object)
 {
-  EosDiscoveryFeedKnowledgeAppArtworkCardStore *store = EOS_DISCOVERY_FEED_KNOWLEDGE_APP_ARTWORK_CARD_STORE (object);
-  EosDiscoveryFeedKnowledgeAppArtworkCardStorePrivate *priv = eos_discovery_feed_knowledge_app_artwork_card_store_get_instance_private (store);
+  ContentFeedKnowledgeAppArtworkCardStore *store = CONTENT_FEED_KNOWLEDGE_APP_ARTWORK_CARD_STORE (object);
+  ContentFeedKnowledgeAppArtworkCardStorePrivate *priv = content_feed_knowledge_app_artwork_card_store_get_instance_private (store);
 
   g_clear_pointer (&priv->author, g_free);
   g_clear_pointer (&priv->first_date, g_free);
 
-  G_OBJECT_CLASS (eos_discovery_feed_knowledge_app_artwork_card_store_parent_class)->finalize (object);
+  G_OBJECT_CLASS (content_feed_knowledge_app_artwork_card_store_parent_class)->finalize (object);
 }
 
 static void
-eos_discovery_feed_knowledge_app_artwork_card_store_init (EosDiscoveryFeedKnowledgeAppArtworkCardStore *store G_GNUC_UNUSED)
+content_feed_knowledge_app_artwork_card_store_init (ContentFeedKnowledgeAppArtworkCardStore *store G_GNUC_UNUSED)
 {
 }
 
 static void
-base_card_store_iface_init (EosDiscoveryFeedBaseCardStoreInterface *iface G_GNUC_UNUSED)
+base_card_store_iface_init (ContentFeedBaseCardStoreInterface *iface G_GNUC_UNUSED)
 {
 }
 
 static void
-eos_discovery_feed_knowledge_app_artwork_card_store_class_init (EosDiscoveryFeedKnowledgeAppArtworkCardStoreClass *klass)
+content_feed_knowledge_app_artwork_card_store_class_init (ContentFeedKnowledgeAppArtworkCardStoreClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-  object_class->get_property = eos_discovery_feed_knowledge_app_artwork_card_store_get_property;
-  object_class->set_property = eos_discovery_feed_knowledge_app_artwork_card_store_set_property;
-  object_class->finalize = eos_discovery_feed_knowledge_app_artwork_card_store_finalize;
+  object_class->get_property = content_feed_knowledge_app_artwork_card_store_get_property;
+  object_class->set_property = content_feed_knowledge_app_artwork_card_store_set_property;
+  object_class->finalize = content_feed_knowledge_app_artwork_card_store_finalize;
 
-  eos_discovery_feed_knowledge_app_artwork_card_store_props[PROP_AUTHOR] =
+  content_feed_knowledge_app_artwork_card_store_props[PROP_AUTHOR] =
     g_param_spec_string ("author",
                          "Author of Artwork",
                          "The author of the artwork",
                          "",
                          G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY);
 
-  eos_discovery_feed_knowledge_app_artwork_card_store_props[PROP_FIRST_DATE] =
+  content_feed_knowledge_app_artwork_card_store_props[PROP_FIRST_DATE] =
     g_param_spec_string ("first-date",
                          "First Date of Artwork",
                          "The first date that the artwork was published "
@@ -144,29 +144,29 @@ eos_discovery_feed_knowledge_app_artwork_card_store_class_init (EosDiscoveryFeed
 
   g_object_class_install_properties (object_class,
                                      PROP_TYPE,
-                                     eos_discovery_feed_knowledge_app_artwork_card_store_props);
+                                     content_feed_knowledge_app_artwork_card_store_props);
 
   g_object_class_override_property (object_class,
                                     PROP_TYPE,
                                     "type");
 }
 
-EosDiscoveryFeedKnowledgeAppArtworkCardStore *
-eos_discovery_feed_knowledge_app_artwork_card_store_new (const gchar                         *title,
-                                                         const gchar                         *uri,
-                                                         const gchar                         *author,
-                                                         const gchar                         *first_date,
-                                                         GInputStream                        *thumbnail,
-                                                         const gchar                         *desktop_id,
-                                                         const gchar                         *bus_name,
-                                                         const gchar                         *knowledge_search_object_path,
-                                                         const gchar                         *knowledge_app_id,
-                                                         EosDiscoveryFeedCardLayoutDirection  layout_direction,
-                                                         guint                                thumbnail_size,
-                                                         const gchar                         *thumbnail_uri,
-                                                         const gchar                         *content_type)
+ContentFeedKnowledgeAppArtworkCardStore *
+content_feed_knowledge_app_artwork_card_store_new (const gchar                         *title,
+                                                   const gchar                         *uri,
+                                                   const gchar                         *author,
+                                                   const gchar                         *first_date,
+                                                   GInputStream                        *thumbnail,
+                                                   const gchar                         *desktop_id,
+                                                   const gchar                         *bus_name,
+                                                   const gchar                         *knowledge_search_object_path,
+                                                   const gchar                         *knowledge_app_id,
+                                                   ContentFeedCardLayoutDirection       layout_direction,
+                                                   guint                                thumbnail_size,
+                                                   const gchar                         *thumbnail_uri,
+                                                   const gchar                         *content_type)
 {
-  return g_object_new (EOS_DISCOVERY_FEED_TYPE_KNOWLEDGE_APP_ARTWORK_CARD_STORE,
+  return g_object_new (CONTENT_FEED_TYPE_KNOWLEDGE_APP_ARTWORK_CARD_STORE,
                        "title", title,
                        "uri", uri,
                        "author", author,

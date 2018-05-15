@@ -22,21 +22,21 @@
 
 G_BEGIN_DECLS
 
-#define EOS_DISCOVERY_FEED_TYPE_PROVIDER_INFO eos_discovery_feed_provider_info_get_type ()
-G_DECLARE_FINAL_TYPE (EosDiscoveryFeedProviderInfo, eos_discovery_feed_provider_info, EOS_DISCOVERY_FEED, PROVIDER_INFO, GObject)
+#define CONTENT_FEED_TYPE_PROVIDER_INFO content_feed_provider_info_get_type ()
+G_DECLARE_FINAL_TYPE (ContentFeedProviderInfo, content_feed_provider_info, CONTENT_FEED, PROVIDER_INFO, GObject)
 
-const gchar * eos_discovery_feed_provider_info_get_object_path (EosDiscoveryFeedProviderInfo *provider_info);
-const gchar * eos_discovery_feed_provider_info_get_bus_name (EosDiscoveryFeedProviderInfo *provider_info);
-const gchar * const * eos_discovery_feed_provider_info_get_interfaces (EosDiscoveryFeedProviderInfo *provider_info);
-const gchar * eos_discovery_feed_provider_info_get_knowledge_app_id (EosDiscoveryFeedProviderInfo *provider_info);
-const gchar * eos_discovery_feed_provider_info_get_desktop_file_id (EosDiscoveryFeedProviderInfo *provider_info);
-const gchar * eos_discovery_feed_provider_info_get_knowledge_search_object_path (EosDiscoveryFeedProviderInfo *provider_info);
+const gchar * content_feed_provider_info_get_object_path (ContentFeedProviderInfo *provider_info);
+const gchar * content_feed_provider_info_get_bus_name (ContentFeedProviderInfo *provider_info);
+const gchar * const * content_feed_provider_info_get_interfaces (ContentFeedProviderInfo *provider_info);
+const gchar * content_feed_provider_info_get_knowledge_app_id (ContentFeedProviderInfo *provider_info);
+const gchar * content_feed_provider_info_get_desktop_file_id (ContentFeedProviderInfo *provider_info);
+const gchar * content_feed_provider_info_get_knowledge_search_object_path (ContentFeedProviderInfo *provider_info);
 
-EosDiscoveryFeedProviderInfo * eos_discovery_feed_provider_info_new (const gchar         *path,
-                                                                     const gchar         *bus_name,
-                                                                     const gchar * const *interfaces,
-                                                                     const gchar         *knowledge_app_id,
-                                                                     const gchar         *desktop_file_id,
-                                                                     const gchar         *knowledge_search_object_path);
+ContentFeedProviderInfo * content_feed_provider_info_new (const gchar         *path,
+                                                          const gchar         *bus_name,
+                                                          const gchar * const *interfaces,
+                                                          const gchar         *knowledge_app_id,
+                                                          const gchar         *desktop_file_id,
+                                                          const gchar         *knowledge_search_object_path);
 
 G_END_DECLS

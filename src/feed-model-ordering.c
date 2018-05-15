@@ -26,7 +26,7 @@ models_remaining (GHashTable *model_map,
                   GHashTable *app_indices_for_card_type)
 {
   GHashTableIter iter;
-  EosDiscoveryFeedCardStoreType app_indices_for_card_type_key;
+  ContentFeedCardStoreType app_indices_for_card_type_key;
   guint app_indices_for_card_type_value;
 
   g_hash_table_iter_init (&iter, app_indices_for_card_type);
@@ -46,10 +46,10 @@ models_remaining (GHashTable *model_map,
 }
 
 static void
-insert_model_into_map (GHashTable                     *map,
-                       EosDiscoveryFeedCardStoreType   type,
-                       const gchar                    *source,
-                       EosDiscoveryFeedOrderableModel *orderable_model)
+insert_model_into_map (GHashTable                *map,
+                       ContentFeedCardStoreType   type,
+                       const gchar               *source,
+                       ContentFeedOrderableModel *orderable_model)
 {
   GHashTable *app_map = g_hash_table_lookup (map, GINT_TO_POINTER (type));
   GPtrArray *model_list = NULL;
@@ -83,7 +83,7 @@ convert_nested_hashtables_to_indexable_descriptors_map (GHashTable *nested_hasht
                                                                           NULL,
                                                                           (GDestroyNotify) g_ptr_array_unref);
   GHashTableIter iter;
-  EosDiscoveryFeedCardStoreType type;
+  ContentFeedCardStoreType type;
   GHashTable *app_hashtable;
 
   g_hash_table_iter_init (&iter, nested_hashtables);
@@ -119,9 +119,9 @@ arrange_descriptors_into_map (GPtrArray *descriptors)
 
   for (; i < descriptors->len; ++i)
     {
-      EosDiscoveryFeedOrderableModel *orderable_model = g_ptr_array_index (descriptors, i);
-      const gchar *source = eos_discovery_feed_orderable_model_get_source (orderable_model);
-      EosDiscoveryFeedCardStoreType type = eos_discovery_feed_orderable_model_get_card_store_type (orderable_model);
+      ContentFeedOrderableModel *orderable_model = g_ptr_array_index (descriptors, i);
+      const gchar *source = content_feed_orderable_model_get_source (orderable_model);
+      ContentFeedCardStoreType type = content_feed_orderable_model_get_card_store_type (orderable_model);
 
       insert_model_into_map (map, type, source, orderable_model);
     }
@@ -132,31 +132,31 @@ arrange_descriptors_into_map (GPtrArray *descriptors)
 #define INNER_OUTER_LENGTH 2
 #define INNER_TYPES_LENGTH 4
 
-static EosDiscoveryFeedCardStoreType card_type_indices_ordering[INNER_OUTER_LENGTH][INNER_TYPES_LENGTH] = {
+static ContentFeedCardStoreType card_type_indices_ordering[INNER_OUTER_LENGTH][INNER_TYPES_LENGTH] = {
   {
-    EOS_DISCOVERY_FEED_CARD_STORE_TYPE_NEWS_CARD,
-    EOS_DISCOVERY_FEED_CARD_STORE_TYPE_ARTICLE_CARD,
-    EOS_DISCOVERY_FEED_CARD_STORE_TYPE_VIDEO_CARD,
-    EOS_DISCOVERY_FEED_CARD_STORE_TYPE_ARTWORK_CARD,
+    CONTENT_FEED_CARD_STORE_TYPE_NEWS_CARD,
+    CONTENT_FEED_CARD_STORE_TYPE_ARTICLE_CARD,
+    CONTENT_FEED_CARD_STORE_TYPE_VIDEO_CARD,
+    CONTENT_FEED_CARD_STORE_TYPE_ARTWORK_CARD,
   },
   {
-    EOS_DISCOVERY_FEED_CARD_STORE_TYPE_NEWS_CARD,
-    EOS_DISCOVERY_FEED_CARD_STORE_TYPE_VIDEO_CARD,
-    EOS_DISCOVERY_FEED_CARD_STORE_TYPE_ARTICLE_CARD,
-    EOS_DISCOVERY_FEED_CARD_STORE_TYPE_ARTWORK_CARD
+    CONTENT_FEED_CARD_STORE_TYPE_NEWS_CARD,
+    CONTENT_FEED_CARD_STORE_TYPE_VIDEO_CARD,
+    CONTENT_FEED_CARD_STORE_TYPE_ARTICLE_CARD,
+    CONTENT_FEED_CARD_STORE_TYPE_ARTWORK_CARD
   }
 };
 
 static inline guint
-lookup_card_limit (EosDiscoveryFeedCardStoreType type)
+lookup_card_limit (ContentFeedCardStoreType type)
 {
   switch (type)
     {
-      case EOS_DISCOVERY_FEED_CARD_STORE_TYPE_NEWS_CARD:
+      case CONTENT_FEED_CARD_STORE_TYPE_NEWS_CARD:
         return 5;
-      case EOS_DISCOVERY_FEED_CARD_STORE_TYPE_ARTICLE_CARD:
-      case EOS_DISCOVERY_FEED_CARD_STORE_TYPE_VIDEO_CARD:
-      case EOS_DISCOVERY_FEED_CARD_STORE_TYPE_ARTWORK_CARD:
+      case CONTENT_FEED_CARD_STORE_TYPE_ARTICLE_CARD:
+      case CONTENT_FEED_CARD_STORE_TYPE_VIDEO_CARD:
+      case CONTENT_FEED_CARD_STORE_TYPE_ARTWORK_CARD:
         return 1;
       default:
         break;
@@ -175,16 +175,16 @@ make_app_indices_for_card_type (void)
                                                                             NULL);
 
   g_hash_table_insert (app_indices_for_card_types,
-                       GINT_TO_POINTER (EOS_DISCOVERY_FEED_CARD_STORE_TYPE_NEWS_CARD),
+                       GINT_TO_POINTER (CONTENT_FEED_CARD_STORE_TYPE_NEWS_CARD),
                        0);
   g_hash_table_insert (app_indices_for_card_types,
-                       GINT_TO_POINTER (EOS_DISCOVERY_FEED_CARD_STORE_TYPE_ARTICLE_CARD),
+                       GINT_TO_POINTER (CONTENT_FEED_CARD_STORE_TYPE_ARTICLE_CARD),
                        0);
   g_hash_table_insert (app_indices_for_card_types,
-                       GINT_TO_POINTER (EOS_DISCOVERY_FEED_CARD_STORE_TYPE_VIDEO_CARD),
+                       GINT_TO_POINTER (CONTENT_FEED_CARD_STORE_TYPE_VIDEO_CARD),
                        0);
   g_hash_table_insert (app_indices_for_card_types,
-                       GINT_TO_POINTER (EOS_DISCOVERY_FEED_CARD_STORE_TYPE_ARTWORK_CARD),
+                       GINT_TO_POINTER (CONTENT_FEED_CARD_STORE_TYPE_ARTWORK_CARD),
                        0);
 
   return g_steal_pointer (&app_indices_for_card_types);
@@ -263,12 +263,12 @@ card_emitter_state_free (CardEmitterState *state)
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (CardEmitterState, card_emitter_state_free)
 
-static EosDiscoveryFeedOrderableModel *
+static ContentFeedOrderableModel *
 pick_model_for_position_if_possible (CardEmitterState *state,
                                      GHashTable       *descriptor_map)
 {
   /* Figure out what card type we're picking from */
-  EosDiscoveryFeedCardStoreType card_type =
+  ContentFeedCardStoreType card_type =
     card_type_indices_ordering[state->inner_outer_index][state->card_type_index];
 
   /* Pick the source, then the card for that type */
@@ -298,7 +298,7 @@ move_to_next_source_and_type_index (CardEmitterState *state,
                                     GHashTable       *descriptor_map)
 {
   /* The card type that we were picking from */
-  EosDiscoveryFeedCardStoreType card_type =
+  ContentFeedCardStoreType card_type =
     card_type_indices_ordering[state->inner_outer_index][state->card_type_index];
 
   /* The card sources for that type */
@@ -373,8 +373,8 @@ move_to_next_source_and_type_index (CardEmitterState *state,
 }
 
 /**
- * eos_discovery_feed_arrange_orderable_models:
- * @unordered_orderable_models: (element-type EosDiscoveryFeedOrderableModel): The
+ * content_feed_arrange_orderable_models:
+ * @unordered_orderable_models: (element-type ContentFeedOrderableModel): The
  *                              models to order. The output list may be truncated
  *                              as a result of the reordering operation.
  *
@@ -388,12 +388,12 @@ move_to_next_source_and_type_index (CardEmitterState *state,
  * be inserted and the pattern will repeat itself. There is a limit of one card
  * per app, except for news cards where there is a limit of 5 cards.
  *
- * Returns: (transfer container) (element-type EosDiscoveryFeedOrderableModel): The
+ * Returns: (transfer container) (element-type ContentFeedOrderableModel): The
  *          correctly ordered models.
  */
 GPtrArray *
-eos_discovery_feed_arrange_orderable_models (GPtrArray                                   *unordered_orderable_models,
-                                             EosDiscoveryFeedArrangeOrderableModelsFlags  flags)
+content_feed_arrange_orderable_models (GPtrArray                              *unordered_orderable_models,
+                                       ContentFeedArrangeOrderableModelsFlags  flags)
 {
   g_autoptr(GHashTable) descriptor_map = arrange_descriptors_into_map (unordered_orderable_models);
   guint overall_index = 0;
@@ -403,14 +403,14 @@ eos_discovery_feed_arrange_orderable_models (GPtrArray                          
 
   g_autoptr(GPtrArray) arranged_descriptors = g_ptr_array_new_with_free_func (g_object_unref);
   GPtrArray *word_quote_card_sources = g_hash_table_lookup (descriptor_map,
-                                                            GINT_TO_POINTER (EOS_DISCOVERY_FEED_CARD_STORE_TYPE_WORD_QUOTE_CARD));
+                                                            GINT_TO_POINTER (CONTENT_FEED_CARD_STORE_TYPE_WORD_QUOTE_CARD));
 
   /* Keep running until we either hit the card limit or
    * we run out of models that we can use */
   while (overall_index < CARDS_LIMIT &&
          models_remaining (descriptor_map, state->app_indices_for_card_type))
     {
-      EosDiscoveryFeedOrderableModel *model = NULL;
+      ContentFeedOrderableModel *model = NULL;
 
       /* If we have a word/quote card, append that now */
       if (overall_index == 2 && word_quote_card_sources != NULL)
@@ -440,11 +440,11 @@ eos_discovery_feed_arrange_orderable_models (GPtrArray                          
                                       arranged_descriptors);
 
   /* Now that we're at the end, add installable apps, if requested */
-  if ((flags & EOS_DISCOVERY_FEED_ARRANGE_ORDERABLE_MODEL_FLAGS_INCLUDE_INSTALLABLE_APPS))
+  if ((flags & CONTENT_FEED_ARRANGE_ORDERABLE_MODEL_FLAGS_INCLUDE_INSTALLABLE_APPS))
     {
       GPtrArray *installable_apps_card_sources =
         g_hash_table_lookup (descriptor_map,
-                             GINT_TO_POINTER (EOS_DISCOVERY_FEED_CARD_STORE_TYPE_AVAILABLE_APPS));
+                             GINT_TO_POINTER (CONTENT_FEED_CARD_STORE_TYPE_AVAILABLE_APPS));
 
       if (installable_apps_card_sources != NULL)
         add_first_item_from_first_source (installable_apps_card_sources,

@@ -23,9 +23,9 @@
 
 G_BEGIN_DECLS
 
-#define EOS_DISCOVERY_FEED_TYPE_APP_CARD_STORE eos_discovery_feed_app_card_store_get_type ()
-G_DECLARE_FINAL_TYPE (EosDiscoveryFeedAppCardStore, eos_discovery_feed_app_card_store, EOS_DISCOVERY_FEED, APP_CARD_STORE, GObject)
+#define CONTENT_FEED_TYPE_APP_CARD_STORE content_feed_app_card_store_get_type ()
+G_DECLARE_FINAL_TYPE (ContentFeedAppCardStore, content_feed_app_card_store, CONTENT_FEED, APP_CARD_STORE, GObject)
 
-EosDiscoveryFeedAppCardStore * eos_discovery_feed_app_card_store_new (const gchar *desktop_id);
+ContentFeedAppCardStore * content_feed_app_card_store_new (const gchar *desktop_id);
 
 G_END_DECLS

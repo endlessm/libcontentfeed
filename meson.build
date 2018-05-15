@@ -13,7 +13,7 @@ pkg = import('pkgconfig')
 version_components = meson.project_version().split('.')
 api_version = version_components[0]
 api_name = '@0@-@1@'.format(meson.project_name(), api_version)
-namespace_name = 'EosDiscoveryFeed'
+namespace_name = 'ContentFeed'
 
 # Dependencies
 

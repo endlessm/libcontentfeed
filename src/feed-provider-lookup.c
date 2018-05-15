@@ -29,7 +29,7 @@ determine_flatpak_system_dirs (void)
     "/var/endless-extra/flatpak",
     NULL
   };
-  const gchar *flatpak_system_dirs_env = g_getenv ("EOS_DISCOVERY_FEED_FLATPAK_SYSTEM_DIRS");
+  const gchar *flatpak_system_dirs_env = g_getenv ("CONTENT_FEED_FLATPAK_SYSTEM_DIRS");
 
   if (flatpak_system_dirs_env != NULL)
     return g_strsplit (flatpak_system_dirs_env, ":", -1);
@@ -437,12 +437,12 @@ append_providers_in_directory_to_ptr_array (GFile                *directory,
         return FALSE;     
 
       g_ptr_array_add (providers,
-                       eos_discovery_feed_provider_info_new (provider_object_path,
-                                                             provider_bus_name,
-                                                             (const gchar * const *) provider_supported_interfaces,
-                                                             knowledge_app_id,
-                                                             desktop_id,
-                                                             knowledge_search_object_path));
+                       content_feed_provider_info_new (provider_object_path,
+                                                       provider_bus_name,
+                                                       (const gchar * const *) provider_supported_interfaces,
+                                                       knowledge_app_id,
+                                                       desktop_id,
+                                                       knowledge_search_object_path));
     }
 
   return TRUE;
@@ -537,38 +537,38 @@ lookup_providers_thread (GTask        *task,
 }
 
 /**
- * eos_discovery_feed_find_providers_finish:
+ * content_feed_find_providers_finish:
  * @result: A #GAsyncResult
  * @error: A #GError
  *
- * Complete a call to eos_discovery_feed_find_providers.
+ * Complete a call to content_feed_find_providers.
  *
- * Returns: (transfer none) (element-type EosDiscoveryFeedProviderInfo): A
- *          #GPtrArray of #EosDiscoveryFeedProviderInfo with information
+ * Returns: (transfer none) (element-type ContentFeedProviderInfo): A
+ *          #GPtrArray of #ContentFeedProviderInfo with information
  *          about each provider file, or %NULL on error.
  */
 GPtrArray *
-eos_discovery_feed_find_providers_finish (GAsyncResult  *result,
-                                          GError       **error)
+content_feed_find_providers_finish (GAsyncResult  *result,
+                                    GError       **error)
 {
   GTask *task = G_TASK (result);
   return g_task_propagate_pointer (task, error);
 }
 
 /**
- * eos_discovery_feed_find_providers:
+ * content_feed_find_providers:
  * @cancellable: A #GCancellable
  * @callback: (scope async): Callback function
  * @user_data: Closure for @callback
  *
  * Lookup all provider files on the filesystem and return a #GPtrArray
- * to the GAsyncReadyCallback provided. Use eos_discovery_feed_find_providers_finish
+ * to the GAsyncReadyCallback provided. Use content_feed_find_providers_finish
  * to complete the call.
  */
 void
-eos_discovery_feed_find_providers (GCancellable        *cancellable,
-                                   GAsyncReadyCallback  callback,
-                                   gpointer             user_data)
+content_feed_find_providers (GCancellable        *cancellable,
+                             GAsyncReadyCallback  callback,
+                             gpointer             user_data)
 {
   g_autoptr(GTask) task = g_task_new (NULL, cancellable, callback, user_data);
 

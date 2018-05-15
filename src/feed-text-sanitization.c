@@ -128,7 +128,7 @@ add_ending_period (const gchar *str)
 }
 
 gchar *
-eos_discovery_feed_sanitize_synopsis (const gchar *synopsis)
+content_feed_sanitize_synopsis (const gchar *synopsis)
 {
   g_autofree gchar *stripped = strip (synopsis);
   g_autofree gchar *square_brackets_removed = remove_square_brackets (stripped);

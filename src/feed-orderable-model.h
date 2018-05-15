@@ -22,15 +22,15 @@
 
 G_BEGIN_DECLS
 
-#define EOS_DISCOVERY_FEED_TYPE_ORDERABLE_MODEL eos_discovery_feed_orderable_model_get_type ()
-G_DECLARE_FINAL_TYPE (EosDiscoveryFeedOrderableModel, eos_discovery_feed_orderable_model, EOS_DISCOVERY_FEED, ORDERABLE_MODEL, GObject)
+#define CONTENT_FEED_TYPE_ORDERABLE_MODEL content_feed_orderable_model_get_type ()
+G_DECLARE_FINAL_TYPE (ContentFeedOrderableModel, content_feed_orderable_model, CONTENT_FEED, ORDERABLE_MODEL, GObject)
 
-const gchar * eos_discovery_feed_orderable_model_get_source (EosDiscoveryFeedOrderableModel *model);
-EosDiscoveryFeedCardStoreType eos_discovery_feed_orderable_model_get_card_store_type (EosDiscoveryFeedOrderableModel *model);
-EosDiscoveryFeedBaseCardStore * eos_discovery_feed_orderable_model_get_model (EosDiscoveryFeedOrderableModel *model);
+const gchar * content_feed_orderable_model_get_source (ContentFeedOrderableModel *model);
+ContentFeedCardStoreType content_feed_orderable_model_get_card_store_type (ContentFeedOrderableModel *model);
+ContentFeedBaseCardStore * content_feed_orderable_model_get_model (ContentFeedOrderableModel *model);
 
-EosDiscoveryFeedOrderableModel * eos_discovery_feed_orderable_model_new (EosDiscoveryFeedBaseCardStore *model,
-                                                                         EosDiscoveryFeedCardStoreType  type,
-                                                                         const char                    *source);
+ContentFeedOrderableModel * content_feed_orderable_model_new (ContentFeedBaseCardStore *model,
+                                                              ContentFeedCardStoreType  type,
+                                                              const char                    *source);
 
 G_END_DECLS

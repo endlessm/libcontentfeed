@@ -25,10 +25,10 @@
 
 G_BEGIN_DECLS
 
-#define EOS_DISCOVERY_FEED_TYPE_WORD_QUOTE_CARD_STORE eos_discovery_feed_word_quote_card_store_get_type ()
-G_DECLARE_FINAL_TYPE (EosDiscoveryFeedWordQuoteCardStore, eos_discovery_feed_word_quote_card_store, EOS_DISCOVERY_FEED, WORD_QUOTE_CARD_STORE, GObject)
+#define CONTENT_FEED_TYPE_WORD_QUOTE_CARD_STORE content_feed_word_quote_card_store_get_type ()
+G_DECLARE_FINAL_TYPE (ContentFeedWordQuoteCardStore, content_feed_word_quote_card_store, CONTENT_FEED, WORD_QUOTE_CARD_STORE, GObject)
 
-EosDiscoveryFeedWordQuoteCardStore * eos_discovery_feed_word_quote_card_store_new (EosDiscoveryFeedWordCardStore *word_store,
-                                                                                   EosDiscoveryFeedQuoteCardStore *quote_store);
+ContentFeedWordQuoteCardStore * content_feed_word_quote_card_store_new (ContentFeedWordCardStore *word_store,
+                                                                        ContentFeedQuoteCardStore *quote_store);
 
 G_END_DECLS
