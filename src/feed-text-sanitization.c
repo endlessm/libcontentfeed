@@ -114,13 +114,23 @@ static gchar *
 add_ending_period (const gchar *str)
 {
   guint len = strlen (str);
-  g_autofree gchar *ending_period = g_new0 (gchar, len + 2);
 
-  strcpy (ending_period, str);
-  ending_period[len] = '.';
-  ending_period[len + 1] = '\0';
+  /* Don't add ending period if the string had no length.
+   *
+   * This might be the case if the model had no synopsis, like those
+   * having hook titles. */
+  if (len > 0)
+    {
+      g_autofree gchar *ending_period = g_new0 (gchar, len + 2);
 
-  return g_steal_pointer (&ending_period);
+      strcpy (ending_period, str);
+      ending_period[len] = '.';
+      ending_period[len + 1] = '\0';
+
+      return g_steal_pointer (&ending_period);
+    }
+
+  return g_strdup (str);
 }
 
 gchar *
