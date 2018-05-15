@@ -26,14 +26,13 @@ models_remaining (GHashTable *model_map,
                   GHashTable *app_indices_for_card_type)
 {
   GHashTableIter iter;
-  ContentFeedCardStoreType app_indices_for_card_type_key;
-  guint app_indices_for_card_type_value;
+  gpointer key, value;
 
   g_hash_table_iter_init (&iter, app_indices_for_card_type);
-  while (g_hash_table_iter_next (&iter,
-                                 (gpointer) &app_indices_for_card_type_key,
-                                 (gpointer) &app_indices_for_card_type_value))
+  while (g_hash_table_iter_next (&iter, &key, &value))
     {
+      ContentFeedCardStoreType app_indices_for_card_type_key = GPOINTER_TO_UINT (key);
+      guint app_indices_for_card_type_value = GPOINTER_TO_UINT (value);
       GPtrArray *apps_for_card_type = g_hash_table_lookup (model_map,
                                                            GINT_TO_POINTER (app_indices_for_card_type_key));
 
@@ -83,22 +82,26 @@ convert_nested_hashtables_to_indexable_descriptors_map (GHashTable *nested_hasht
                                                                           NULL,
                                                                           (GDestroyNotify) g_ptr_array_unref);
   GHashTableIter iter;
-  ContentFeedCardStoreType type;
-  GHashTable *app_hashtable;
+  gpointer key, value;
 
   g_hash_table_iter_init (&iter, nested_hashtables);
-  while (g_hash_table_iter_next (&iter, (gpointer) &type, (gpointer) &app_hashtable))
+  while (g_hash_table_iter_next (&iter, &key, &value))
     {
+      ContentFeedCardStoreType type = GPOINTER_TO_UINT (key);
+      GHashTable *app_hashtable = value;
+
       g_autoptr(GPtrArray) app_indices = g_ptr_array_new_full (g_hash_table_size (app_hashtable),
                                                                (GDestroyNotify) g_ptr_array_unref);
       GHashTableIter app_iter;
-      const gchar *source;
-      GPtrArray *models;
+      gpointer app_iter_value;
 
       g_hash_table_iter_init (&app_iter, app_hashtable);
-      while (g_hash_table_iter_next (&app_iter, (gpointer *) &source, (gpointer *) &models))
-        g_ptr_array_add (app_indices,
-                         g_ptr_array_ref (models));
+      while (g_hash_table_iter_next (&app_iter, NULL, &app_iter_value))
+        {
+          GPtrArray *models = app_iter_value;
+          g_ptr_array_add (app_indices,
+                           g_ptr_array_ref (models));
+        }
 
       g_hash_table_insert (indexable_descriptor_map,
                            GINT_TO_POINTER (type),
