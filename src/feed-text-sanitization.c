@@ -23,6 +23,8 @@
 
 #include "config.h"
 
+#define CHARACTER_COUNT_THRESHOLD 60
+
 static gchar *
 regex_replace (const gchar *exp, const gchar *str, const gchar *replacement)
 {
@@ -60,19 +62,27 @@ remove_parens (const gchar *str)
 }
 
 static gchar *
-trim_to_first_two_sentences (const gchar *str)
+trim_to_first_n_sentences_under_threshold (const gchar *str,
+                                           guint        character_threshold)
 {
   g_autoptr(GPtrArray) sentences = g_ptr_array_new ();
   g_auto(GStrv) all_sentences = g_strsplit (str, ".", -1);
   GStrv iter = all_sentences;
-  guint sentence_count = 0;
+  guint character_count = 0;
 
-  for (; *iter != NULL && sentence_count < 2; ++iter)
+  for (; *iter != NULL; ++iter)
     {
-      if (strlen (*iter) > 0)
-        g_ptr_array_add (sentences, *iter);
+      gsize sentence_length = strlen (*iter);
+      gsize sentence_length_with_period = sentence_length + 1;
 
-      ++sentence_count;
+      if (sentence_length == 0)
+        continue;
+
+      if ((character_count + sentence_length_with_period) > character_threshold)
+        break;
+
+      g_ptr_array_add (sentences, *iter);
+      character_count += sentence_length_with_period;
     }
 
   /* Null-terminate */
@@ -113,7 +123,9 @@ eos_discovery_feed_sanitize_synopsis (const gchar *synopsis)
   g_autofree gchar *stripped = strip (synopsis);
   g_autofree gchar *square_brackets_removed = remove_square_brackets (stripped);
   g_autofree gchar *parens_removed = remove_parens (square_brackets_removed);
-  g_autofree gchar *first_two_sentences = trim_to_first_two_sentences (parens_removed);
+  g_autofree gchar *first_two_sentences =
+    trim_to_first_n_sentences_under_threshold (parens_removed,
+                                               CHARACTER_COUNT_THRESHOLD);
   g_autofree gchar *normalized_whitespace = normalize_whitespace (first_two_sentences);
   g_autofree gchar *with_ending_period = add_ending_period (normalized_whitespace);
 
