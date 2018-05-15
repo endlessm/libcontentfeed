@@ -23,7 +23,10 @@
 
 #include "config.h"
 
-#define CHARACTER_COUNT_THRESHOLD 60
+/* Don't take any more sentences if they would cause the number of
+ * lines to go above roughly three. However, we always take the first
+ * sentence, see below. */
+#define CHARACTER_COUNT_THRESHOLD 160
 
 static gchar *
 regex_replace (const gchar *exp, const gchar *str, const gchar *replacement)
@@ -78,7 +81,10 @@ trim_to_first_n_sentences_under_threshold (const gchar *str,
       if (sentence_length == 0)
         continue;
 
-      if ((character_count + sentence_length_with_period) > character_threshold)
+      /* Even if the sentence would be longer than the character threshold
+       * we should always take it. We'll ellipsize it later at a word boundary. */
+      if ((character_count + sentence_length_with_period) > character_threshold &&
+          sentences->len > 0)
         break;
 
       g_ptr_array_add (sentences, *iter);
