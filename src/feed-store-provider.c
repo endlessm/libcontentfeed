@@ -930,7 +930,8 @@ received_all_unordered_card_array_results_from_queries (GObject      *source G_G
       GSList *result_list = g_task_propagate_pointer (g_ptr_array_index (results, i),
                                                       &local_error);
 
-      if (result_list == NULL)
+      /* Need to check the result of local_error as result_list can be NULL */
+      if (local_error != NULL)
         {
           g_message ("Query failed: %s", local_error->message);
           g_clear_error (&local_error);
