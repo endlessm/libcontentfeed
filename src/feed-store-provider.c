@@ -930,7 +930,8 @@ received_all_unordered_card_array_results_from_queries (GObject      *source G_G
       GSList *result_list = g_task_propagate_pointer (g_ptr_array_index (results, i),
                                                       &local_error);
 
-      if (result_list == NULL)
+      /* Need to check the result of local_error as result_list can be NULL */
+      if (local_error != NULL)
         {
           g_message ("Query failed: %s", local_error->message);
           g_clear_error (&local_error);
@@ -951,6 +952,11 @@ received_all_unordered_card_array_results_from_queries (GObject      *source G_G
  * @error: A #GError
  *
  * Complete the call to eos_discovery_feed_unordered_results_from_queries.
+ *
+ * Note that a %NULL return value here does not necessarily mean that
+ * the task finished with an error, since NULL is a valid value for
+ * an empty list, the caller should check the @error outparam to check
+ * if an error occurred.
  *
  * Returns: (transfer container) (element-type EosDiscoveryFeedBaseCardStore):
  *          A #GSList of #EosDiscoveryFeedBaseCardStore. Note that the list will
