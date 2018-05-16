@@ -953,6 +953,11 @@ received_all_unordered_card_array_results_from_queries (GObject      *source G_G
  *
  * Complete the call to eos_discovery_feed_unordered_results_from_queries.
  *
+ * Note that a %NULL return value here does not necessarily mean that
+ * the task finished with an error, since NULL is a valid value for
+ * an empty list, the caller should check the @error outparam to check
+ * if an error occurred.
+ *
  * Returns: (transfer container) (element-type EosDiscoveryFeedBaseCardStore):
  *          A #GSList of #EosDiscoveryFeedBaseCardStore. Note that the list will
  *          be in reversed order internally for efficiency but in any event
