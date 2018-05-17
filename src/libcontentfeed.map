@@ -1,6 +1,6 @@
 {
     global:
-        eos_discovery_feed_*;
+        content_feed_*;
     local:
         *;
 };

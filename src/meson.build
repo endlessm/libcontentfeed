@@ -1,9 +1,9 @@
 # Copyright 2018 Endless Mobile, Inc.
 
 version = configuration_data()
-version.set('EOS_DISCOVERY_FEED_MAJOR_VERSION', version_components[0])
-version.set('EOS_DISCOVERY_FEED_MINOR_VERSION', version_components[1])
-version.set('EOS_DISCOVERY_FEED_MICRO_VERSION', version_components[2])
+version.set('CONTENT_FEED_MAJOR_VERSION', version_components[0])
+version.set('CONTENT_FEED_MINOR_VERSION', version_components[1])
+version.set('CONTENT_FEED_MICRO_VERSION', version_components[2])
 version_h = configure_file(configuration: version,
     input: 'libcontentfeed-version.h.in', output: 'libcontentfeed-version.h')
 
@@ -68,6 +68,7 @@ sources = [
 
 enum_sources = gnome.mkenums_simple('feed-enums', install_header: true,
     install_dir: join_paths(get_option('includedir'), api_name),
+    identifier_prefix: 'content_feed',
     sources: enum_headers)
 
 main_library = library('@0@-@1@'.format(meson.project_name(), api_version),
@@ -88,10 +89,10 @@ gnome.generate_gir(
         '-DG_LOG_DOMAIN="@0@"'.format(namespace_name),
         '-DCOMPILING_LIBCONTENTFEED'
     ],
-    identifier_prefix: 'EosDiscoveryFeed',
+    identifier_prefix: 'ContentFeed',
     includes: ['Gio-2.0', 'GLib-2.0', 'GObject-2.0'],
     install: true, namespace: namespace_name, nsversion: api_version,
-    sources: introspection_sources, symbol_prefix: 'eos_discovery_feed',
+    sources: introspection_sources, symbol_prefix: 'content_feed',
 )
 
 install_headers(installed_headers, subdir: api_name)

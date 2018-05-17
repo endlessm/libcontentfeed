@@ -1,17 +1,17 @@
 /* Copyright 2018 Endless Mobile, Inc.
  *
- * eos-discovery-feed is free software: you can redistribute it and/or
+ * libcontentfeed is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 2.1 of the
  * License, or (at your option) any later version.
  *
- * eos-discovery-feed is distributed in the hope that it will be useful,
+ * libcontentfeed is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with eos-discovery-feed.  If not, see
+ * License along with libcontentfeed.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
 
@@ -19,19 +19,19 @@
 #include "feed-enums.h"
 #include "feed-orderable-model.h"
 
-typedef struct _EosDiscoveryFeedOrderableModel {
+typedef struct _ContentFeedOrderableModel {
   GObject object;
 } EosDiscoeryFeedOrderableModel;
 
-typedef struct _EosDiscoveryFeedOrderableModelPrivate
+typedef struct _ContentFeedOrderableModelPrivate
 {
-  EosDiscoveryFeedBaseCardStore *model;
-  EosDiscoveryFeedCardStoreType  type;
-  gchar                         *source;
-} EosDiscoveryFeedOrderableModelPrivate;
+  ContentFeedBaseCardStore *model;
+  ContentFeedCardStoreType  type;
+  gchar                    *source;
+} ContentFeedOrderableModelPrivate;
 
-G_DEFINE_TYPE_WITH_PRIVATE (EosDiscoveryFeedOrderableModel,
-                            eos_discovery_feed_orderable_model,
+G_DEFINE_TYPE_WITH_PRIVATE (ContentFeedOrderableModel,
+                            content_feed_orderable_model,
                             G_TYPE_OBJECT)
 
 enum {
@@ -42,64 +42,64 @@ enum {
   NPROPS
 };
 
-static GParamSpec *eos_discovery_feed_orderable_model_props [NPROPS] = { NULL, };
+static GParamSpec *content_feed_orderable_model_props [NPROPS] = { NULL, };
 
 /**
- * eos_discovery_feed_orderable_model_get_source:
- * @model: An #EosDiscoveryFeedOrderableModel
+ * content_feed_orderable_model_get_source:
+ * @model: An #ContentFeedOrderableModel
  *
  * Returns: (transfer none): The source of this model or %NULL if no source was
  *                           registered at construction.
  */
 const gchar *
-eos_discovery_feed_orderable_model_get_source (EosDiscoveryFeedOrderableModel *model)
+content_feed_orderable_model_get_source (ContentFeedOrderableModel *model)
 {
-  EosDiscoveryFeedOrderableModelPrivate *priv = eos_discovery_feed_orderable_model_get_instance_private (model);
+  ContentFeedOrderableModelPrivate *priv = content_feed_orderable_model_get_instance_private (model);
 
   return priv->source;
 }
 
 /**
- * eos_discovery_feed_orderable_model_get_card_store_type:
- * @model: An #EosDiscoveryFeedOrderableModel
+ * content_feed_orderable_model_get_card_store_type:
+ * @model: An #ContentFeedOrderableModel
  *
- * Returns: The #EosDiscoveryFeedCardStoreType of this model.
+ * Returns: The #ContentFeedCardStoreType of this model.
  */
-EosDiscoveryFeedCardStoreType
-eos_discovery_feed_orderable_model_get_card_store_type (EosDiscoveryFeedOrderableModel *model)
+ContentFeedCardStoreType
+content_feed_orderable_model_get_card_store_type (ContentFeedOrderableModel *model)
 {
-  EosDiscoveryFeedOrderableModelPrivate *priv = eos_discovery_feed_orderable_model_get_instance_private (model);
+  ContentFeedOrderableModelPrivate *priv = content_feed_orderable_model_get_instance_private (model);
 
   return priv->type;
 }
 
 /**
- * eos_discovery_feed_orderable_model_get_model:
- * @model: An #EosDiscoveryFeedOrderableModel
+ * content_feed_orderable_model_get_model:
+ * @model: An #ContentFeedOrderableModel
  *
- * Returns: (transfer none): The #EosDiscoveryFeedCardBaseCardStore of this model.
+ * Returns: (transfer none): The #ContentFeedCardBaseCardStore of this model.
  */
-EosDiscoveryFeedBaseCardStore *
-eos_discovery_feed_orderable_model_get_model (EosDiscoveryFeedOrderableModel *model)
+ContentFeedBaseCardStore *
+content_feed_orderable_model_get_model (ContentFeedOrderableModel *model)
 {
-  EosDiscoveryFeedOrderableModelPrivate *priv = eos_discovery_feed_orderable_model_get_instance_private (model);
+  ContentFeedOrderableModelPrivate *priv = content_feed_orderable_model_get_instance_private (model);
 
   return priv->model;
 }
 
 static void
-eos_discovery_feed_orderable_model_init (EosDiscoveryFeedOrderableModel *model G_GNUC_UNUSED)
+content_feed_orderable_model_init (ContentFeedOrderableModel *model G_GNUC_UNUSED)
 {
 }
 
 static void
-eos_discovery_feed_orderable_model_set_property (GObject      *object,
-                                                 guint         prop_id,
-                                                 const GValue *value,
-                                                 GParamSpec   *pspec)
+content_feed_orderable_model_set_property (GObject      *object,
+                                           guint         prop_id,
+                                           const GValue *value,
+                                           GParamSpec   *pspec)
 {
-  EosDiscoveryFeedOrderableModel *store = EOS_DISCOVERY_FEED_ORDERABLE_MODEL (object);
-  EosDiscoveryFeedOrderableModelPrivate *priv = eos_discovery_feed_orderable_model_get_instance_private (store);
+  ContentFeedOrderableModel *store = CONTENT_FEED_ORDERABLE_MODEL (object);
+  ContentFeedOrderableModelPrivate *priv = content_feed_orderable_model_get_instance_private (store);
 
   switch (prop_id)
     {
@@ -118,13 +118,13 @@ eos_discovery_feed_orderable_model_set_property (GObject      *object,
 }
 
 static void
-eos_discovery_feed_orderable_model_get_property (GObject    *object,
-                                                 guint       prop_id,
-                                                 GValue     *value,
-                                                 GParamSpec *pspec)
+content_feed_orderable_model_get_property (GObject    *object,
+                                           guint       prop_id,
+                                           GValue     *value,
+                                           GParamSpec *pspec)
 {
-  EosDiscoveryFeedOrderableModel *store = EOS_DISCOVERY_FEED_ORDERABLE_MODEL (object);
-  EosDiscoveryFeedOrderableModelPrivate *priv = eos_discovery_feed_orderable_model_get_instance_private (store);
+  ContentFeedOrderableModel *store = CONTENT_FEED_ORDERABLE_MODEL (object);
+  ContentFeedOrderableModelPrivate *priv = content_feed_orderable_model_get_instance_private (store);
 
   switch (prop_id)
     {
@@ -143,42 +143,42 @@ eos_discovery_feed_orderable_model_get_property (GObject    *object,
 }
 
 static void
-eos_discovery_feed_orderable_model_finalize (GObject *object)
+content_feed_orderable_model_finalize (GObject *object)
 {
-  EosDiscoveryFeedOrderableModel *store = EOS_DISCOVERY_FEED_ORDERABLE_MODEL (object);
-  EosDiscoveryFeedOrderableModelPrivate *priv = eos_discovery_feed_orderable_model_get_instance_private (store);
+  ContentFeedOrderableModel *store = CONTENT_FEED_ORDERABLE_MODEL (object);
+  ContentFeedOrderableModelPrivate *priv = content_feed_orderable_model_get_instance_private (store);
 
   g_clear_pointer (&priv->source, g_free);
   g_clear_object (&priv->model);
 
-  G_OBJECT_CLASS (eos_discovery_feed_orderable_model_parent_class)->finalize (object);
+  G_OBJECT_CLASS (content_feed_orderable_model_parent_class)->finalize (object);
 }
 
 static void
-eos_discovery_feed_orderable_model_class_init (EosDiscoveryFeedOrderableModelClass *klass)
+content_feed_orderable_model_class_init (ContentFeedOrderableModelClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-  object_class->get_property = eos_discovery_feed_orderable_model_get_property;
-  object_class->set_property = eos_discovery_feed_orderable_model_set_property;
-  object_class->finalize = eos_discovery_feed_orderable_model_finalize;
+  object_class->get_property = content_feed_orderable_model_get_property;
+  object_class->set_property = content_feed_orderable_model_set_property;
+  object_class->finalize = content_feed_orderable_model_finalize;
 
-  eos_discovery_feed_orderable_model_props[PROP_MODEL] =
+  content_feed_orderable_model_props[PROP_MODEL] =
     g_param_spec_object ("model",
                          "Model",
-                         "The EosDiscoveryFeedBaseCardStore for this orderable model",
-                         EOS_DISCOVERY_FEED_TYPE_BASE_CARD_STORE,
+                         "The ContentFeedBaseCardStore for this orderable model",
+                         CONTENT_FEED_TYPE_BASE_CARD_STORE,
                          G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY);
 
-  eos_discovery_feed_orderable_model_props[PROP_TYPE] =
+  content_feed_orderable_model_props[PROP_TYPE] =
     g_param_spec_enum ("type",
                        "Type",
-                       "The EosDiscoveryFeedCardStoreType for this orderable model",
-                       EOS_TYPE_DISCOVERY_FEED_CARD_STORE_TYPE,
-                       EOS_DISCOVERY_FEED_CARD_STORE_TYPE_UNSET,
+                       "The ContentFeedCardStoreType for this orderable model",
+                       CONTENT_FEED_TYPE_CONTENT_FEED_CARD_STORE_TYPE,
+                       CONTENT_FEED_CARD_STORE_TYPE_UNSET,
                        G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY);
 
-  eos_discovery_feed_orderable_model_props[PROP_SOURCE] =
+  content_feed_orderable_model_props[PROP_SOURCE] =
     g_param_spec_string ("source",
                          "Source",
                          "A string indicating where this model came from",
@@ -187,15 +187,15 @@ eos_discovery_feed_orderable_model_class_init (EosDiscoveryFeedOrderableModelCla
 
   g_object_class_install_properties (object_class,
                                      NPROPS,
-                                     eos_discovery_feed_orderable_model_props);
+                                     content_feed_orderable_model_props);
 }
 
-EosDiscoveryFeedOrderableModel *
-eos_discovery_feed_orderable_model_new (EosDiscoveryFeedBaseCardStore *model,
-                                        EosDiscoveryFeedCardStoreType  type,
-                                        const char                    *source)
+ContentFeedOrderableModel *
+content_feed_orderable_model_new (ContentFeedBaseCardStore *model,
+                                  ContentFeedCardStoreType  type,
+                                  const char               *source)
 {
-  return g_object_new (EOS_DISCOVERY_FEED_TYPE_ORDERABLE_MODEL,
+  return g_object_new (CONTENT_FEED_TYPE_ORDERABLE_MODEL,
                        "model", model,
                        "type", type,
                        "source", source,

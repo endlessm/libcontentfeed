@@ -1,17 +1,17 @@
 /* Copyright 2018 Endless Mobile, Inc.
  *
- * eos-discovery-feed is free software: you can redistribute it and/or
+ * libcontentfeed is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 2.1 of the
  * License, or (at your option) any later version.
  *
- * eos-discovery-feed is distributed in the hope that it will be useful,
+ * libcontentfeed is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with eos-discovery-feed.  If not, see
+ * License along with libcontentfeed.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
 
@@ -197,35 +197,35 @@ find_thumbnail_stream_in_shards (const gchar * const  *shards_strv,
   return NULL;
 }
 
-typedef EosDiscoveryFeedKnowledgeAppCardStore * (*EosDiscoveryFeedKnowledgeAppCardStoreFactoryFunc) (const gchar                         *title,
-                                                                                                     const gchar                         *uri,
-                                                                                                     const gchar                         *synopsis,
-                                                                                                     GInputStream                        *thumbnail,
-                                                                                                     const gchar                         *desktop_id,
-                                                                                                     const gchar                         *bus_name,
-                                                                                                     const gchar                         *knowledge_search_object_path,
-                                                                                                     const gchar                         *knowledge_app_id,
-                                                                                                     EosDiscoveryFeedCardLayoutDirection  layout_direction,
-                                                                                                     guint                                thumbnail_size,
-                                                                                                     const gchar                         *thumbnail_uri,
-                                                                                                     const gchar                         *content_type);
+typedef ContentFeedKnowledgeAppCardStore * (*ContentFeedKnowledgeAppCardStoreFactoryFunc) (const gchar                    *title,
+                                                                                           const gchar                    *uri,
+                                                                                           const gchar                    *synopsis,
+                                                                                           GInputStream                   *thumbnail,
+                                                                                           const gchar                    *desktop_id,
+                                                                                           const gchar                    *bus_name,
+                                                                                           const gchar                    *knowledge_search_object_path,
+                                                                                           const gchar                    *knowledge_app_id,
+                                                                                           ContentFeedCardLayoutDirection  layout_direction,
+                                                                                           guint                           thumbnail_size,
+                                                                                           const gchar                    *thumbnail_uri,
+                                                                                           const gchar                    *content_type);
 
 
 typedef struct _ArticleCardsFromShardsAndItemsData
 {
-  EosDiscoveryFeedKnowledgeAppProxy                *ka_proxy;
-  EosDiscoveryFeedCardLayoutDirection               direction;
-  EosDiscoveryFeedCardStoreType                     type;
-  guint                                             thumbnail_size;
-  EosDiscoveryFeedKnowledgeAppCardStoreFactoryFunc  factory;
+  ContentFeedKnowledgeAppProxy                *ka_proxy;
+  ContentFeedCardLayoutDirection               direction;
+  ContentFeedCardStoreType                     type;
+  guint                                        thumbnail_size;
+  ContentFeedKnowledgeAppCardStoreFactoryFunc  factory;
 } ArticleCardsFromShardsAndItemsData;
 
 static ArticleCardsFromShardsAndItemsData *
-article_cards_from_shards_and_items_data_new (EosDiscoveryFeedKnowledgeAppProxy                *ka_proxy,
-                                              EosDiscoveryFeedCardLayoutDirection               direction,
-                                              EosDiscoveryFeedCardStoreType                     type,
-                                              guint                                             thumbnail_size,
-                                              EosDiscoveryFeedKnowledgeAppCardStoreFactoryFunc  factory)
+article_cards_from_shards_and_items_data_new (ContentFeedKnowledgeAppProxy                *ka_proxy,
+                                              ContentFeedCardLayoutDirection               direction,
+                                              ContentFeedCardStoreType                     type,
+                                              guint                                        thumbnail_size,
+                                              ContentFeedKnowledgeAppCardStoreFactoryFunc  factory)
 {
   ArticleCardsFromShardsAndItemsData *data = g_new0 (ArticleCardsFromShardsAndItemsData, 1);
 
@@ -276,7 +276,7 @@ article_cards_from_shards_and_items (const char * const *shards_strv,
       GVariant *model_props = g_ptr_array_index (model_props_variants, i);
       const gchar *unsanitized_snopsis = lookup_string_in_dict_variant (model_props,
                                                                         "synopsis");
-      const gchar *synopsis = eos_discovery_feed_sanitize_synopsis (unsanitized_snopsis);
+      const gchar *synopsis = content_feed_sanitize_synopsis (unsanitized_snopsis);
       const gchar *title = lookup_string_in_dict_variant (model_props, "title");
       const gchar *ekn_id = lookup_string_in_dict_variant (model_props, "ekn_id");
       const gchar *thumbnail_uri = lookup_string_in_dict_variant (model_props,
@@ -285,25 +285,25 @@ article_cards_from_shards_and_items (const char * const *shards_strv,
                                                                  "content_type");
       g_autoptr(GInputStream) thumbnail_stream =
         find_thumbnail_stream_in_shards (shards_strv, thumbnail_uri);
-      GDBusProxy *dbus_proxy = eos_discovery_feed_knowledge_app_proxy_get_dbus_proxy (data->ka_proxy);
+      GDBusProxy *dbus_proxy = content_feed_knowledge_app_proxy_get_dbus_proxy (data->ka_proxy);
 
-      EosDiscoveryFeedKnowledgeAppCardStore *store =
+      ContentFeedKnowledgeAppCardStore *store =
         data->factory (title,
                        ekn_id,
                        synopsis,
                        thumbnail_stream,
-                       eos_discovery_feed_knowledge_app_proxy_get_desktop_id (data->ka_proxy),
+                       content_feed_knowledge_app_proxy_get_desktop_id (data->ka_proxy),
                        g_dbus_proxy_get_name (dbus_proxy),
-                       eos_discovery_feed_knowledge_app_proxy_get_knowledge_search_object_path (data->ka_proxy),
-                       eos_discovery_feed_knowledge_app_proxy_get_knowledge_app_id (data->ka_proxy),
-                       data->direction ? data->direction : EOS_DISCOVERY_FEED_CARD_LAYOUT_DIRECTION_IMAGE_FIRST,
+                       content_feed_knowledge_app_proxy_get_knowledge_search_object_path (data->ka_proxy),
+                       content_feed_knowledge_app_proxy_get_knowledge_app_id (data->ka_proxy),
+                       data->direction ? data->direction : CONTENT_FEED_CARD_LAYOUT_DIRECTION_IMAGE_FIRST,
                        data->thumbnail_size,
                        thumbnail_uri,
                        content_type);
       orderable_stores = g_slist_prepend (orderable_stores,
-                                          eos_discovery_feed_orderable_model_new (EOS_DISCOVERY_FEED_BASE_CARD_STORE (store),
-                                                                                  data->type,
-                                                                                  eos_discovery_feed_knowledge_app_proxy_get_desktop_id (data->ka_proxy)));
+                                          content_feed_orderable_model_new (CONTENT_FEED_BASE_CARD_STORE (store),
+                                                                            data->type,
+                                                                            content_feed_knowledge_app_proxy_get_desktop_id (data->ka_proxy)));
     }
 
     return g_steal_pointer (&orderable_stores);
@@ -311,19 +311,19 @@ article_cards_from_shards_and_items (const char * const *shards_strv,
 
 typedef struct _AppendDiscoveryFeedContentFromProxyData
 {
-  gchar                                            *method;
-  EosDiscoveryFeedCardStoreType                     type;
-  EosDiscoveryFeedCardLayoutDirection               direction;
-  EosDiscoveryFeedKnowledgeAppCardStoreFactoryFunc  factory;
-  guint                                             thumbnail_size;
+  gchar                                       *method;
+  ContentFeedCardStoreType                     type;
+  ContentFeedCardLayoutDirection               direction;
+  ContentFeedKnowledgeAppCardStoreFactoryFunc  factory;
+  guint                                        thumbnail_size;
 } AppendDiscoveryFeedContentFromProxyData;
 
 static AppendDiscoveryFeedContentFromProxyData *
-append_discovery_feed_content_from_proxy_data_new (const gchar                                     *method,
-                                                   EosDiscoveryFeedCardStoreType                    type,
-                                                   EosDiscoveryFeedCardLayoutDirection              direction,
-                                                   EosDiscoveryFeedKnowledgeAppCardStoreFactoryFunc factory,
-                                                   guint                                            thumbnail_size)
+append_discovery_feed_content_from_proxy_data_new (const gchar                                *method,
+                                                   ContentFeedCardStoreType                    type,
+                                                   ContentFeedCardLayoutDirection              direction,
+                                                   ContentFeedKnowledgeAppCardStoreFactoryFunc factory,
+                                                   guint                                       thumbnail_size)
 
 {
   AppendDiscoveryFeedContentFromProxyData *data = g_new0 (AppendDiscoveryFeedContentFromProxyData, 1);
@@ -349,11 +349,11 @@ G_DEFINE_AUTOPTR_CLEANUP_FUNC (AppendDiscoveryFeedContentFromProxyData,
                                append_discovery_feed_content_from_proxy_data_free)
 
 static gboolean
-append_discovery_feed_content_from_proxy (EosDiscoveryFeedKnowledgeAppProxy  *ka_proxy,
-                                          gpointer                            proxy_data,
-                                          GCancellable                       *cancellable,
-                                          gpointer                           *out_result,
-                                          GError                            **error)
+append_discovery_feed_content_from_proxy (ContentFeedKnowledgeAppProxy  *ka_proxy,
+                                          gpointer                       proxy_data,
+                                          GCancellable                  *cancellable,
+                                          gpointer                      *out_result,
+                                          GError                       **error)
 {
   g_autoptr(AppendDiscoveryFeedContentFromProxyData) data = proxy_data;
   g_autoptr(ArticleCardsFromShardsAndItemsData) marshal_data = article_cards_from_shards_and_items_data_new (ka_proxy,
@@ -361,7 +361,7 @@ append_discovery_feed_content_from_proxy (EosDiscoveryFeedKnowledgeAppProxy  *ka
                                                                                                              data->type,
                                                                                                              data->thumbnail_size,
                                                                                                              data->factory);
-  GDBusProxy *dbus_proxy = eos_discovery_feed_knowledge_app_proxy_get_dbus_proxy (ka_proxy);
+  GDBusProxy *dbus_proxy = content_feed_knowledge_app_proxy_get_dbus_proxy (ka_proxy);
 
   return call_dbus_proxy_and_construct_from_models_and_shards (dbus_proxy,
                                                                data->method,
@@ -447,7 +447,7 @@ video_cards_from_shards_and_items (const char * const *shards_strv,
                                    GPtrArray          *model_props_variants,
                                    gpointer            user_data)
 {
-  EosDiscoveryFeedKnowledgeAppProxy *ka_proxy = user_data;
+  ContentFeedKnowledgeAppProxy *ka_proxy = user_data;
   GSList *orderable_stores = NULL;
   guint i = 0;
 
@@ -465,8 +465,8 @@ video_cards_from_shards_and_items (const char * const *shards_strv,
                                                                  "content_type");
       g_autofree gchar *duration = parse_duration (in_duration, &local_error);
       g_autoptr(GInputStream) thumbnail_stream = NULL;
-      EosDiscoveryFeedKnowledgeAppVideoCardStore *store = NULL;
-      GDBusProxy *dbus_proxy = eos_discovery_feed_knowledge_app_proxy_get_dbus_proxy (ka_proxy);
+      ContentFeedKnowledgeAppVideoCardStore *store = NULL;
+      GDBusProxy *dbus_proxy = content_feed_knowledge_app_proxy_get_dbus_proxy (ka_proxy);
 
       if (duration == NULL)
         {
@@ -478,33 +478,33 @@ video_cards_from_shards_and_items (const char * const *shards_strv,
 
       thumbnail_stream = find_thumbnail_stream_in_shards (shards_strv, thumbnail_uri);
 
-      store = eos_discovery_feed_knowledge_app_video_card_store_new (title,
-                                                                     ekn_id,
-                                                                     duration,
-                                                                     thumbnail_stream,
-                                                                     eos_discovery_feed_knowledge_app_proxy_get_desktop_id (ka_proxy),
-                                                                     g_dbus_proxy_get_name (dbus_proxy),
-                                                                     eos_discovery_feed_knowledge_app_proxy_get_knowledge_search_object_path (ka_proxy),
-                                                                     eos_discovery_feed_knowledge_app_proxy_get_knowledge_app_id (ka_proxy),
-                                                                     thumbnail_uri,
-                                                                     content_type);
+      store = content_feed_knowledge_app_video_card_store_new (title,
+                                                               ekn_id,
+                                                               duration,
+                                                               thumbnail_stream,
+                                                               content_feed_knowledge_app_proxy_get_desktop_id (ka_proxy),
+                                                               g_dbus_proxy_get_name (dbus_proxy),
+                                                               content_feed_knowledge_app_proxy_get_knowledge_search_object_path (ka_proxy),
+                                                               content_feed_knowledge_app_proxy_get_knowledge_app_id (ka_proxy),
+                                                               thumbnail_uri,
+                                                               content_type);
       orderable_stores = g_slist_prepend (orderable_stores,
-                                          eos_discovery_feed_orderable_model_new (EOS_DISCOVERY_FEED_BASE_CARD_STORE (store),
-                                                                                  EOS_DISCOVERY_FEED_CARD_STORE_TYPE_VIDEO_CARD,
-                                                                                  eos_discovery_feed_knowledge_app_proxy_get_desktop_id (ka_proxy)));
+                                          content_feed_orderable_model_new (CONTENT_FEED_BASE_CARD_STORE (store),
+                                                                            CONTENT_FEED_CARD_STORE_TYPE_VIDEO_CARD,
+                                                                            content_feed_knowledge_app_proxy_get_desktop_id (ka_proxy)));
     }
 
     return g_steal_pointer (&orderable_stores);
 }
 
 static gboolean
-append_discovery_feed_video_from_proxy (EosDiscoveryFeedKnowledgeAppProxy  *ka_proxy,
-                                        gpointer                            proxy_data G_GNUC_UNUSED,
-                                        GCancellable                       *cancellable,
-                                        gpointer                           *out_result,
-                                        GError                            **error)
+append_discovery_feed_video_from_proxy (ContentFeedKnowledgeAppProxy  *ka_proxy,
+                                        gpointer                       proxy_data G_GNUC_UNUSED,
+                                        GCancellable                  *cancellable,
+                                        gpointer                      *out_result,
+                                        GError                       **error)
 {
-  GDBusProxy *dbus_proxy = eos_discovery_feed_knowledge_app_proxy_get_dbus_proxy (ka_proxy);
+  GDBusProxy *dbus_proxy = content_feed_knowledge_app_proxy_get_dbus_proxy (ka_proxy);
 
   return call_dbus_proxy_and_construct_from_models_and_shards (dbus_proxy,
                                                                "GetVideos",
@@ -520,7 +520,7 @@ artwork_cards_from_shards_and_items (const char * const *shards_strv,
                                      GPtrArray          *model_props_variants,
                                      gpointer            user_data)
 {
-  EosDiscoveryFeedKnowledgeAppProxy *ka_proxy = user_data;
+  ContentFeedKnowledgeAppProxy *ka_proxy = user_data;
   GSList *orderable_stores = NULL;
   guint i = 0;
 
@@ -535,39 +535,39 @@ artwork_cards_from_shards_and_items (const char * const *shards_strv,
       const gchar *content_type = lookup_string_in_dict_variant (model_props, "content_type");
       g_autoptr(GInputStream) thumbnail_stream =
         find_thumbnail_stream_in_shards (shards_strv, thumbnail_uri);
-      GDBusProxy *dbus_proxy = eos_discovery_feed_knowledge_app_proxy_get_dbus_proxy (ka_proxy);
+      GDBusProxy *dbus_proxy = content_feed_knowledge_app_proxy_get_dbus_proxy (ka_proxy);
 
-      EosDiscoveryFeedKnowledgeAppArtworkCardStore *store =
-        eos_discovery_feed_knowledge_app_artwork_card_store_new (title,
-                                                                 ekn_id,
-                                                                 author,
-                                                                 first_date != NULL ? first_date : "",
-                                                                 thumbnail_stream,
-                                                                 eos_discovery_feed_knowledge_app_proxy_get_desktop_id (ka_proxy),
-                                                                 g_dbus_proxy_get_name (dbus_proxy),
-                                                                 eos_discovery_feed_knowledge_app_proxy_get_knowledge_search_object_path (ka_proxy),
-                                                                 eos_discovery_feed_knowledge_app_proxy_get_knowledge_app_id (ka_proxy),
-                                                                 EOS_DISCOVERY_FEED_CARD_LAYOUT_DIRECTION_IMAGE_FIRST,
-                                                                 EOS_DISCOVERY_FEED_THUMBNAIL_SIZE_ARTWORK,
-                                                                 thumbnail_uri,
-                                                                 content_type);
+      ContentFeedKnowledgeAppArtworkCardStore *store =
+        content_feed_knowledge_app_artwork_card_store_new (title,
+                                                           ekn_id,
+                                                           author,
+                                                           first_date != NULL ? first_date : "",
+                                                           thumbnail_stream,
+                                                           content_feed_knowledge_app_proxy_get_desktop_id (ka_proxy),
+                                                           g_dbus_proxy_get_name (dbus_proxy),
+                                                           content_feed_knowledge_app_proxy_get_knowledge_search_object_path (ka_proxy),
+                                                           content_feed_knowledge_app_proxy_get_knowledge_app_id (ka_proxy),
+                                                           CONTENT_FEED_CARD_LAYOUT_DIRECTION_IMAGE_FIRST,
+                                                           CONTENT_FEED_THUMBNAIL_SIZE_ARTWORK,
+                                                           thumbnail_uri,
+                                                           content_type);
       orderable_stores = g_slist_prepend (orderable_stores,
-                                          eos_discovery_feed_orderable_model_new (EOS_DISCOVERY_FEED_BASE_CARD_STORE (store),
-                                                                                  EOS_DISCOVERY_FEED_CARD_STORE_TYPE_ARTWORK_CARD,
-                                                                                  eos_discovery_feed_knowledge_app_proxy_get_desktop_id (ka_proxy)));
+                                          content_feed_orderable_model_new (CONTENT_FEED_BASE_CARD_STORE (store),
+                                                                            CONTENT_FEED_CARD_STORE_TYPE_ARTWORK_CARD,
+                                                                            content_feed_knowledge_app_proxy_get_desktop_id (ka_proxy)));
     }
 
     return g_steal_pointer (&orderable_stores);
 }
 
 static gboolean
-append_discovery_feed_artwork_from_proxy (EosDiscoveryFeedKnowledgeAppProxy  *ka_proxy,
-                                          gpointer                            proxy_data G_GNUC_UNUSED,
-                                          GCancellable                       *cancellable,
-                                          gpointer                           *out_result,
-                                          GError                            **error)
+append_discovery_feed_artwork_from_proxy (ContentFeedKnowledgeAppProxy  *ka_proxy,
+                                          gpointer                       proxy_data G_GNUC_UNUSED,
+                                          GCancellable                  *cancellable,
+                                          gpointer                      *out_result,
+                                          GError                       **error)
 {
-  GDBusProxy *dbus_proxy = eos_discovery_feed_knowledge_app_proxy_get_dbus_proxy (ka_proxy);
+  GDBusProxy *dbus_proxy = content_feed_knowledge_app_proxy_get_dbus_proxy (ka_proxy);
 
   return call_dbus_proxy_and_construct_from_models_and_shards (dbus_proxy,
                                                                "ArtworkCardDescriptions",
@@ -578,25 +578,25 @@ append_discovery_feed_artwork_from_proxy (EosDiscoveryFeedKnowledgeAppProxy  *ka
                                                                error);
 }
 
-typedef gboolean (*AppendStoresFromProxyFunc) (EosDiscoveryFeedKnowledgeAppProxy  *ka_proxy,
-                                               gpointer                            proxy_data,
-                                               GCancellable                       *cancellable,
-                                               gpointer                           *out_result,
-                                               GError                            **error);
+typedef gboolean (*AppendStoresFromProxyFunc) (ContentFeedKnowledgeAppProxy  *ka_proxy,
+                                               gpointer                       proxy_data,
+                                               GCancellable                  *cancellable,
+                                               gpointer                      *out_result,
+                                               GError                       **error);
 
 typedef struct _AppendStoresTaskData
 {
-  EosDiscoveryFeedKnowledgeAppProxy *ka_proxy;
-  AppendStoresFromProxyFunc          proxy_func;
-  GDestroyNotify                     proxy_return_destroy;
-  gpointer                           proxy_data;
+  ContentFeedKnowledgeAppProxy *ka_proxy;
+  AppendStoresFromProxyFunc     proxy_func;
+  GDestroyNotify                proxy_return_destroy;
+  gpointer                      proxy_data;
 } AppendStoresTaskData;
 
 static AppendStoresTaskData *
-append_stores_task_data_new (EosDiscoveryFeedKnowledgeAppProxy *ka_proxy,
-                             AppendStoresFromProxyFunc          proxy_func,
-                             GDestroyNotify                     proxy_return_destroy,
-                             gpointer                           proxy_data)
+append_stores_task_data_new (ContentFeedKnowledgeAppProxy *ka_proxy,
+                             AppendStoresFromProxyFunc     proxy_func,
+                             GDestroyNotify                proxy_return_destroy,
+                             gpointer                      proxy_data)
 {
   AppendStoresTaskData *data = g_new0 (AppendStoresTaskData, 1);
 
@@ -643,13 +643,13 @@ append_stores_task_from_proxy_thread (GTask        *task,
 }
 
 static void
-append_stores_task_from_proxy (EosDiscoveryFeedKnowledgeAppProxy *ka_proxy,
-                               AppendStoresFromProxyFunc          proxy_func,
-                               GDestroyNotify                     proxy_return_destroy,
-                               gpointer                           proxy_func_data,
-                               GCancellable                      *cancellable,
-                               GAsyncReadyCallback                callback,
-                               gpointer                           user_data)
+append_stores_task_from_proxy (ContentFeedKnowledgeAppProxy *ka_proxy,
+                               AppendStoresFromProxyFunc     proxy_func,
+                               GDestroyNotify                proxy_return_destroy,
+                               gpointer                      proxy_func_data,
+                               GCancellable                 *cancellable,
+                               GAsyncReadyCallback           callback,
+                               gpointer                      user_data)
 {
   g_autoptr(GTask) task = g_task_new (NULL, cancellable, callback, user_data);
   g_autoptr(AppendStoresTaskData) data = append_stores_task_data_new (ka_proxy,
@@ -680,9 +680,9 @@ marshal_word_quote_into_store (GObject      *source G_GNUC_UNUSED,
   g_autoptr(GPtrArray) word_quote_results = g_task_propagate_pointer (G_TASK (result),
                                                                       &local_error);
   GSList *word_quote_card_results = NULL;
-  EosDiscoveryFeedWordCardStore *word_store = NULL;
-  EosDiscoveryFeedQuoteCardStore *quote_store = NULL;
-  EosDiscoveryFeedWordQuoteCardStore *store = NULL;
+  ContentFeedWordCardStore *word_store = NULL;
+  ContentFeedQuoteCardStore *quote_store = NULL;
+  ContentFeedWordQuoteCardStore *store = NULL;
 
   if (word_quote_results == NULL)
     {
@@ -718,14 +718,14 @@ marshal_word_quote_into_store (GObject      *source G_GNUC_UNUSED,
       return;
     }
 
-  store = eos_discovery_feed_word_quote_card_store_new (word_store, quote_store);
+  store = content_feed_word_quote_card_store_new (word_store, quote_store);
 
   /* Return a list with one element for consistency with everything else,
    * so that we can flat-map everything together in the end */
   word_quote_card_results = g_slist_prepend (word_quote_card_results,
-                                             eos_discovery_feed_orderable_model_new (EOS_DISCOVERY_FEED_BASE_CARD_STORE (store),
-                                                                                     EOS_DISCOVERY_FEED_CARD_STORE_TYPE_WORD_QUOTE_CARD,
-                                                                                     "word-quote"));
+                                             content_feed_orderable_model_new (CONTENT_FEED_BASE_CARD_STORE (store),
+                                                                               CONTENT_FEED_CARD_STORE_TYPE_WORD_QUOTE_CARD,
+                                                                               "word-quote"));
 
   g_task_return_pointer (task,
                          g_steal_pointer (&word_quote_card_results),
@@ -740,19 +740,19 @@ word_card_from_item (GVariant *model_props,
   const gchar *part_of_speech = lookup_string_in_dict_variant (model_props, "part_of_speech");
   const gchar *definition = lookup_string_in_dict_variant (model_props, "definition");
 
-  return G_OBJECT (eos_discovery_feed_word_card_store_new (word,
-                                                           part_of_speech,
-                                                           definition));
+  return G_OBJECT (content_feed_word_card_store_new (word,
+                                                     part_of_speech,
+                                                     definition));
 }
 
 static gboolean
-append_discovery_feed_word_from_proxy (EosDiscoveryFeedKnowledgeAppProxy  *ka_proxy,
-                                       gpointer                            proxy_data G_GNUC_UNUSED,
-                                       GCancellable                       *cancellable,
-                                       gpointer                           *out_result,
-                                       GError                            **error)
+append_discovery_feed_word_from_proxy (ContentFeedKnowledgeAppProxy  *ka_proxy,
+                                       gpointer                       proxy_data G_GNUC_UNUSED,
+                                       GCancellable                  *cancellable,
+                                       gpointer                      *out_result,
+                                       GError                       **error)
 {
-  GDBusProxy *dbus_proxy = eos_discovery_feed_knowledge_app_proxy_get_dbus_proxy (ka_proxy);
+  GDBusProxy *dbus_proxy = content_feed_knowledge_app_proxy_get_dbus_proxy (ka_proxy);
   return call_dbus_proxy_and_construct_from_model (dbus_proxy,
                                                    "GetWordOfTheDay",
                                                    word_card_from_item,
@@ -769,17 +769,17 @@ quote_card_from_item (GVariant *model_props,
   const gchar *title = lookup_string_in_dict_variant (model_props, "title");
   const gchar *author = lookup_string_in_dict_variant (model_props, "author");
 
-  return G_OBJECT (eos_discovery_feed_quote_card_store_new (title, author));
+  return G_OBJECT (content_feed_quote_card_store_new (title, author));
 }
 
 static gboolean
-append_discovery_feed_quote_from_proxy (EosDiscoveryFeedKnowledgeAppProxy  *ka_proxy,
-                                        gpointer                            proxy_data G_GNUC_UNUSED,
-                                        GCancellable                       *cancellable,
-                                        gpointer                           *out_result,
-                                        GError                            **error)
+append_discovery_feed_quote_from_proxy (ContentFeedKnowledgeAppProxy  *ka_proxy,
+                                        gpointer                       proxy_data G_GNUC_UNUSED,
+                                        GCancellable                  *cancellable,
+                                        gpointer                      *out_result,
+                                        GError                       **error)
 {
-  GDBusProxy *dbus_proxy = eos_discovery_feed_knowledge_app_proxy_get_dbus_proxy (ka_proxy);
+  GDBusProxy *dbus_proxy = content_feed_knowledge_app_proxy_get_dbus_proxy (ka_proxy);
 
   return call_dbus_proxy_and_construct_from_model (dbus_proxy,
                                                    "GetQuoteOfTheDay",
@@ -791,11 +791,11 @@ append_discovery_feed_quote_from_proxy (EosDiscoveryFeedKnowledgeAppProxy  *ka_p
 }
 
 static void
-append_discovery_feed_word_quote_from_proxies (EosDiscoveryFeedKnowledgeAppProxy *word_ka_proxy,
-                                               EosDiscoveryFeedKnowledgeAppProxy *quote_ka_proxy,
-                                               GCancellable                      *cancellable,
-                                               GAsyncReadyCallback                callback,
-                                               gpointer                           user_data)
+append_discovery_feed_word_quote_from_proxies (ContentFeedKnowledgeAppProxy *word_ka_proxy,
+                                               ContentFeedKnowledgeAppProxy *quote_ka_proxy,
+                                               GCancellable                 *cancellable,
+                                               GAsyncReadyCallback           callback,
+                                               gpointer                      user_data)
 {
   g_autoptr(GTask) task = g_task_new (NULL, cancellable, callback, user_data);
   AllTasksResultsClosure *all_tasks_closure = all_tasks_results_closure_new (g_object_unref,
@@ -839,8 +839,8 @@ unordered_card_arrays_from_queries (GPtrArray           *ka_proxies,
 
   for (i = 0; i < ka_proxies->len; ++i)
     {
-      EosDiscoveryFeedKnowledgeAppProxy *ka_proxy = g_ptr_array_index (ka_proxies, i);
-      GDBusProxy *dbus_proxy = eos_discovery_feed_knowledge_app_proxy_get_dbus_proxy (ka_proxy);
+      ContentFeedKnowledgeAppProxy *ka_proxy = g_ptr_array_index (ka_proxies, i);
+      GDBusProxy *dbus_proxy = content_feed_knowledge_app_proxy_get_dbus_proxy (ka_proxy);
       const gchar *interface_name = g_dbus_proxy_get_interface_name (dbus_proxy);
 
       if (g_strcmp0 (interface_name, "com.endlessm.DiscoveryFeedContent") == 0)
@@ -848,10 +848,10 @@ unordered_card_arrays_from_queries (GPtrArray           *ka_proxies,
                                        append_discovery_feed_content_from_proxy,
                                        (GDestroyNotify) object_slist_free,
                                        append_discovery_feed_content_from_proxy_data_new ("ArticleCardDescriptions",
-                                                                                          EOS_DISCOVERY_FEED_CARD_STORE_TYPE_ARTICLE_CARD,
-                                                                                          EOS_DISCOVERY_FEED_CARD_LAYOUT_DIRECTION_IMAGE_FIRST,
-                                                                                          eos_discovery_feed_knowledge_app_card_store_new,
-                                                                                          EOS_DISCOVERY_FEED_THUMBNAIL_SIZE_ARTICLE),
+                                                                                          CONTENT_FEED_CARD_STORE_TYPE_ARTICLE_CARD,
+                                                                                          CONTENT_FEED_CARD_LAYOUT_DIRECTION_IMAGE_FIRST,
+                                                                                          content_feed_knowledge_app_card_store_new,
+                                                                                          CONTENT_FEED_THUMBNAIL_SIZE_ARTICLE),
                                        cancellable,
                                        individual_task_result_completed,
                                        individual_task_result_closure_new (all_tasks_closure));
@@ -860,10 +860,10 @@ unordered_card_arrays_from_queries (GPtrArray           *ka_proxies,
                                        append_discovery_feed_content_from_proxy,
                                        (GDestroyNotify) object_slist_free,
                                        append_discovery_feed_content_from_proxy_data_new ("GetRecentNews",
-                                                                                          EOS_DISCOVERY_FEED_CARD_STORE_TYPE_ARTICLE_CARD,
-                                                                                          EOS_DISCOVERY_FEED_CARD_LAYOUT_DIRECTION_IMAGE_LAST,
-                                                                                          (EosDiscoveryFeedKnowledgeAppCardStoreFactoryFunc) eos_discovery_feed_knowledge_app_news_card_store_new,
-                                                                                          EOS_DISCOVERY_FEED_THUMBNAIL_SIZE_NEWS),
+                                                                                          CONTENT_FEED_CARD_STORE_TYPE_ARTICLE_CARD,
+                                                                                          CONTENT_FEED_CARD_LAYOUT_DIRECTION_IMAGE_LAST,
+                                                                                          (ContentFeedKnowledgeAppCardStoreFactoryFunc) content_feed_knowledge_app_news_card_store_new,
+                                                                                          CONTENT_FEED_THUMBNAIL_SIZE_NEWS),
                                        cancellable,
                                        individual_task_result_completed,
                                        individual_task_result_closure_new (all_tasks_closure));
@@ -947,34 +947,34 @@ received_all_unordered_card_array_results_from_queries (GObject      *source G_G
 }
 
 /**
- * eos_discovery_feed_unordered_results_from_queries_finish:
+ * content_feed_unordered_results_from_queries_finish:
  * @result: A #GAsyncResult
  * @error: A #GError
  *
- * Complete the call to eos_discovery_feed_unordered_results_from_queries.
+ * Complete the call to content_feed_unordered_results_from_queries.
  *
  * Note that a %NULL return value here does not necessarily mean that
  * the task finished with an error, since NULL is a valid value for
  * an empty list, the caller should check the @error outparam to check
  * if an error occurred.
  *
- * Returns: (transfer container) (element-type EosDiscoveryFeedBaseCardStore):
- *          A #GSList of #EosDiscoveryFeedBaseCardStore. Note that the list will
+ * Returns: (transfer container) (element-type ContentFeedBaseCardStore):
+ *          A #GSList of #ContentFeedBaseCardStore. Note that the list will
  *          be in reversed order internally for efficiency but in any event
  *          are not guaranteed to be in a user-friendly order. You should
- *          use eos_discovery_feed_arrange_orderable_models to ensure that the
+ *          use content_feed_arrange_orderable_models to ensure that the
  *          models are in the correct order for presentation to the user.
  */
 GSList *
-eos_discovery_feed_unordered_results_from_queries_finish (GAsyncResult  *result,
-                                                          GError       **error)
+content_feed_unordered_results_from_queries_finish (GAsyncResult  *result,
+                                                    GError       **error)
 {
   return g_task_propagate_pointer (G_TASK (result), error);
 }
 
 /**
- * eos_discovery_feed_unordered_results_from_queries:
- * @ka_proxies: (element-type EosDiscoveryFeedKnowledgeAppProxy): An array of #EosDiscoveryFeedKnowledgeAppProxy
+ * content_feed_unordered_results_from_queries:
+ * @ka_proxies: (element-type ContentFeedKnowledgeAppProxy): An array of #ContentFeedKnowledgeAppProxy
  * @cancellable: A #GCancellable
  * @callback: Callback function
  * @user_data: Closure for @callback
@@ -983,10 +983,10 @@ eos_discovery_feed_unordered_results_from_queries_finish (GAsyncResult  *result,
  * model results to @callback.
  */
 void
-eos_discovery_feed_unordered_results_from_queries (GPtrArray           *ka_proxies,
-                                                   GCancellable        *cancellable,
-                                                   GAsyncReadyCallback  callback,
-                                                   gpointer             user_data)
+content_feed_unordered_results_from_queries (GPtrArray           *ka_proxies,
+                                             GCancellable        *cancellable,
+                                             GAsyncReadyCallback  callback,
+                                             gpointer             user_data)
 {
   GTask *task = g_task_new (NULL, cancellable, callback, user_data);
 

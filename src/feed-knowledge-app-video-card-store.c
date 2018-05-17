@@ -1,17 +1,17 @@
 /* Copyright 2018 Endless Mobile, Inc.
  *
- * eos-discovery-feed is free software: you can redistribute it and/or
+ * libcontentfeed is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 2.1 of the
  * License, or (at your option) any later version.
  *
- * eos-discovery-feed is distributed in the hope that it will be useful,
+ * libcontentfeed is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with eos-discovery-feed.  If not, see
+ * License along with libcontentfeed.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
 
@@ -19,24 +19,24 @@
 #include "feed-knowledge-app-video-card-store.h"
 #include "feed-sizes.h"
 
-struct _EosDiscoveryFeedKnowledgeAppVideoCardStore
+struct _ContentFeedKnowledgeAppVideoCardStore
 {
   GObject parent_instance;
 };
 
-typedef struct _EosDiscoveryFeedKnowledgeAppVideoCardStorePrivate
+typedef struct _ContentFeedKnowledgeAppVideoCardStorePrivate
 {
   gchar *duration;
-} EosDiscoveryFeedKnowledgeAppVideoCardStorePrivate;
+} ContentFeedKnowledgeAppVideoCardStorePrivate;
 
-static void base_card_store_iface_init (EosDiscoveryFeedBaseCardStoreInterface *iface);
+static void base_card_store_iface_init (ContentFeedBaseCardStoreInterface *iface);
 
-G_DEFINE_TYPE_WITH_CODE (EosDiscoveryFeedKnowledgeAppVideoCardStore,
-                         eos_discovery_feed_knowledge_app_video_card_store,
-                         EOS_DISCOVERY_FEED_TYPE_KNOWLEDGE_APP_CARD_STORE,
-                         G_IMPLEMENT_INTERFACE (EOS_DISCOVERY_FEED_TYPE_BASE_CARD_STORE,
+G_DEFINE_TYPE_WITH_CODE (ContentFeedKnowledgeAppVideoCardStore,
+                         content_feed_knowledge_app_video_card_store,
+                         CONTENT_FEED_TYPE_KNOWLEDGE_APP_CARD_STORE,
+                         G_IMPLEMENT_INTERFACE (CONTENT_FEED_TYPE_BASE_CARD_STORE,
                                                 base_card_store_iface_init)
-                         G_ADD_PRIVATE (EosDiscoveryFeedKnowledgeAppVideoCardStore))
+                         G_ADD_PRIVATE (ContentFeedKnowledgeAppVideoCardStore))
 
 enum {
   PROP_0,
@@ -45,16 +45,16 @@ enum {
   NPROPS
 };
 
-static GParamSpec *eos_discovery_feed_knowledge_app_video_card_store_props [NPROPS] = { NULL, };
+static GParamSpec *content_feed_knowledge_app_video_card_store_props [NPROPS] = { NULL, };
 
 static void
-eos_discovery_feed_knowledge_app_video_card_store_set_property (GObject      *object,
-                                                                guint         prop_id,
-                                                                const GValue *value,
-                                                                GParamSpec   *pspec)
+content_feed_knowledge_app_video_card_store_set_property (GObject      *object,
+                                                          guint         prop_id,
+                                                          const GValue *value,
+                                                          GParamSpec   *pspec)
 {
-  EosDiscoveryFeedKnowledgeAppVideoCardStore *store = EOS_DISCOVERY_FEED_KNOWLEDGE_APP_VIDEO_CARD_STORE (object);
-  EosDiscoveryFeedKnowledgeAppVideoCardStorePrivate *priv = eos_discovery_feed_knowledge_app_video_card_store_get_instance_private (store);
+  ContentFeedKnowledgeAppVideoCardStore *store = CONTENT_FEED_KNOWLEDGE_APP_VIDEO_CARD_STORE (object);
+  ContentFeedKnowledgeAppVideoCardStorePrivate *priv = content_feed_knowledge_app_video_card_store_get_instance_private (store);
 
   switch (prop_id)
     {
@@ -67,18 +67,18 @@ eos_discovery_feed_knowledge_app_video_card_store_set_property (GObject      *ob
 }
 
 static void
-eos_discovery_feed_knowledge_app_video_card_store_get_property (GObject    *object,
-                                                                guint       prop_id,
-                                                                GValue     *value,
-                                                                GParamSpec *pspec)
+content_feed_knowledge_app_video_card_store_get_property (GObject    *object,
+                                                          guint       prop_id,
+                                                          GValue     *value,
+                                                          GParamSpec *pspec)
 {
-  EosDiscoveryFeedKnowledgeAppVideoCardStore *store = EOS_DISCOVERY_FEED_KNOWLEDGE_APP_VIDEO_CARD_STORE (object);
-  EosDiscoveryFeedKnowledgeAppVideoCardStorePrivate *priv = eos_discovery_feed_knowledge_app_video_card_store_get_instance_private (store);
+  ContentFeedKnowledgeAppVideoCardStore *store = CONTENT_FEED_KNOWLEDGE_APP_VIDEO_CARD_STORE (object);
+  ContentFeedKnowledgeAppVideoCardStorePrivate *priv = content_feed_knowledge_app_video_card_store_get_instance_private (store);
 
   switch (prop_id)
     {
     case PROP_TYPE:
-      g_value_set_enum (value, EOS_DISCOVERY_FEED_CARD_STORE_TYPE_VIDEO_CARD);
+      g_value_set_enum (value, CONTENT_FEED_CARD_STORE_TYPE_VIDEO_CARD);
       break;
     case PROP_DURATION:
       g_value_set_string (value, priv->duration);
@@ -89,36 +89,36 @@ eos_discovery_feed_knowledge_app_video_card_store_get_property (GObject    *obje
 }
 
 static void
-eos_discovery_feed_knowledge_app_video_card_store_finalize (GObject *object)
+content_feed_knowledge_app_video_card_store_finalize (GObject *object)
 {
-  EosDiscoveryFeedKnowledgeAppVideoCardStore *store = EOS_DISCOVERY_FEED_KNOWLEDGE_APP_VIDEO_CARD_STORE (object);
-  EosDiscoveryFeedKnowledgeAppVideoCardStorePrivate *priv = eos_discovery_feed_knowledge_app_video_card_store_get_instance_private (store);
+  ContentFeedKnowledgeAppVideoCardStore *store = CONTENT_FEED_KNOWLEDGE_APP_VIDEO_CARD_STORE (object);
+  ContentFeedKnowledgeAppVideoCardStorePrivate *priv = content_feed_knowledge_app_video_card_store_get_instance_private (store);
 
   g_clear_pointer (&priv->duration, g_free);
 
-  G_OBJECT_CLASS (eos_discovery_feed_knowledge_app_video_card_store_parent_class)->finalize (object);
+  G_OBJECT_CLASS (content_feed_knowledge_app_video_card_store_parent_class)->finalize (object);
 }
 
 static void
-eos_discovery_feed_knowledge_app_video_card_store_init (EosDiscoveryFeedKnowledgeAppVideoCardStore *store G_GNUC_UNUSED)
+content_feed_knowledge_app_video_card_store_init (ContentFeedKnowledgeAppVideoCardStore *store G_GNUC_UNUSED)
 {
 }
 
 static void
-base_card_store_iface_init (EosDiscoveryFeedBaseCardStoreInterface *iface G_GNUC_UNUSED)
+base_card_store_iface_init (ContentFeedBaseCardStoreInterface *iface G_GNUC_UNUSED)
 {
 }
 
 static void
-eos_discovery_feed_knowledge_app_video_card_store_class_init (EosDiscoveryFeedKnowledgeAppVideoCardStoreClass *klass)
+content_feed_knowledge_app_video_card_store_class_init (ContentFeedKnowledgeAppVideoCardStoreClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-  object_class->get_property = eos_discovery_feed_knowledge_app_video_card_store_get_property;
-  object_class->set_property = eos_discovery_feed_knowledge_app_video_card_store_set_property;
-  object_class->finalize = eos_discovery_feed_knowledge_app_video_card_store_finalize;
+  object_class->get_property = content_feed_knowledge_app_video_card_store_get_property;
+  object_class->set_property = content_feed_knowledge_app_video_card_store_set_property;
+  object_class->finalize = content_feed_knowledge_app_video_card_store_finalize;
 
-  eos_discovery_feed_knowledge_app_video_card_store_props[PROP_DURATION] =
+  content_feed_knowledge_app_video_card_store_props[PROP_DURATION] =
     g_param_spec_string ("duration",
                          "Duration of Video",
                          "The duration of the video in no particular format",
@@ -127,26 +127,26 @@ eos_discovery_feed_knowledge_app_video_card_store_class_init (EosDiscoveryFeedKn
 
   g_object_class_install_properties (object_class,
                                      PROP_TYPE,
-                                     eos_discovery_feed_knowledge_app_video_card_store_props);
+                                     content_feed_knowledge_app_video_card_store_props);
 
   g_object_class_override_property (object_class,
                                     PROP_TYPE,
                                     "type");
 }
 
-EosDiscoveryFeedKnowledgeAppVideoCardStore *
-eos_discovery_feed_knowledge_app_video_card_store_new (const gchar  *title,
-                                                       const gchar  *uri,
-                                                       const gchar  *duration,
-                                                       GInputStream *thumbnail,
-                                                       const gchar  *desktop_id,
-                                                       const gchar  *bus_name,
-                                                       const gchar  *knowledge_search_object_path,
-                                                       const gchar  *knowledge_app_id,
-                                                       const gchar  *thumbnail_uri,
-                                                       const gchar  *content_type)
+ContentFeedKnowledgeAppVideoCardStore *
+content_feed_knowledge_app_video_card_store_new (const gchar  *title,
+                                                 const gchar  *uri,
+                                                 const gchar  *duration,
+                                                 GInputStream *thumbnail,
+                                                 const gchar  *desktop_id,
+                                                 const gchar  *bus_name,
+                                                 const gchar  *knowledge_search_object_path,
+                                                 const gchar  *knowledge_app_id,
+                                                 const gchar  *thumbnail_uri,
+                                                 const gchar  *content_type)
 {
-  return g_object_new (EOS_DISCOVERY_FEED_TYPE_KNOWLEDGE_APP_VIDEO_CARD_STORE,
+  return g_object_new (CONTENT_FEED_TYPE_KNOWLEDGE_APP_VIDEO_CARD_STORE,
                        "title", title,
                        "uri", uri,
                        "duration", duration,

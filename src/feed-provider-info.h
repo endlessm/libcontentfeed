@@ -1,17 +1,17 @@
 /* Copyright 2018 Endless Mobile, Inc.
  *
- * eos-discovery-feed is free software: you can redistribute it and/or
+ * libcontentfeed is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 2.1 of the
  * License, or (at your option) any later version.
  *
- * eos-discovery-feed is distributed in the hope that it will be useful,
+ * libcontentfeed is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with eos-discovery-feed.  If not, see
+ * License along with libcontentfeed.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
 
@@ -22,21 +22,21 @@
 
 G_BEGIN_DECLS
 
-#define EOS_DISCOVERY_FEED_TYPE_PROVIDER_INFO eos_discovery_feed_provider_info_get_type ()
-G_DECLARE_FINAL_TYPE (EosDiscoveryFeedProviderInfo, eos_discovery_feed_provider_info, EOS_DISCOVERY_FEED, PROVIDER_INFO, GObject)
+#define CONTENT_FEED_TYPE_PROVIDER_INFO content_feed_provider_info_get_type ()
+G_DECLARE_FINAL_TYPE (ContentFeedProviderInfo, content_feed_provider_info, CONTENT_FEED, PROVIDER_INFO, GObject)
 
-const gchar * eos_discovery_feed_provider_info_get_object_path (EosDiscoveryFeedProviderInfo *provider_info);
-const gchar * eos_discovery_feed_provider_info_get_bus_name (EosDiscoveryFeedProviderInfo *provider_info);
-const gchar * const * eos_discovery_feed_provider_info_get_interfaces (EosDiscoveryFeedProviderInfo *provider_info);
-const gchar * eos_discovery_feed_provider_info_get_knowledge_app_id (EosDiscoveryFeedProviderInfo *provider_info);
-const gchar * eos_discovery_feed_provider_info_get_desktop_file_id (EosDiscoveryFeedProviderInfo *provider_info);
-const gchar * eos_discovery_feed_provider_info_get_knowledge_search_object_path (EosDiscoveryFeedProviderInfo *provider_info);
+const gchar * content_feed_provider_info_get_object_path (ContentFeedProviderInfo *provider_info);
+const gchar * content_feed_provider_info_get_bus_name (ContentFeedProviderInfo *provider_info);
+const gchar * const * content_feed_provider_info_get_interfaces (ContentFeedProviderInfo *provider_info);
+const gchar * content_feed_provider_info_get_knowledge_app_id (ContentFeedProviderInfo *provider_info);
+const gchar * content_feed_provider_info_get_desktop_file_id (ContentFeedProviderInfo *provider_info);
+const gchar * content_feed_provider_info_get_knowledge_search_object_path (ContentFeedProviderInfo *provider_info);
 
-EosDiscoveryFeedProviderInfo * eos_discovery_feed_provider_info_new (const gchar         *path,
-                                                                     const gchar         *bus_name,
-                                                                     const gchar * const *interfaces,
-                                                                     const gchar         *knowledge_app_id,
-                                                                     const gchar         *desktop_file_id,
-                                                                     const gchar         *knowledge_search_object_path);
+ContentFeedProviderInfo * content_feed_provider_info_new (const gchar         *path,
+                                                          const gchar         *bus_name,
+                                                          const gchar * const *interfaces,
+                                                          const gchar         *knowledge_app_id,
+                                                          const gchar         *desktop_file_id,
+                                                          const gchar         *knowledge_search_object_path);
 
 G_END_DECLS
